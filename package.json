@@ -1,0 +1,43 @@
+{
+  "name": "capstone-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/jest": "^26.0.23",
+    "@types/node": "^15.12.2",
+    "@types/react": "^17.0.11",
+    "@types/react-dom": "^17.0.7",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3",
+    "typescript": "^4.3.3"
+  },
+  "scripts": {
+    "start": "npm run watch:css && react-scripts start",
+    "build": "npm run build:css && react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "build:css": "postcss src/assets/tailwind.css -o src/assets/main.css",
+    "watch:css": "postcss src/assets/tailwind.css -o src/assets/main.css",
+    "setup": "npm run setup:css && npm run setup:test && npm run setup:misc",
+    "setup:css": "npm install -D tailwindcss@2.1.2 postcss@8.2.15 postcss-cli@8.3.1 autoprefixer@10.2.5",
+    "setup:test": "npm install -D enzyme@3.11.0 @types/enzyme@ts4.2 @wojtekmaj/enzyme-adapter-react-17@latest react-test-renderer@17.0.2",
+    "setup:misc": "npm install -D gh-pages@3.1.0",
+    "eslint": ".\\node_modules\\.bin\\eslint --init"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
