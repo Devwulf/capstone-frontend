@@ -20,7 +20,7 @@ export default class TestPage extends React.Component<TestPageProps, TestPageSta
         };
     }
 
-    async componentDidMount() {
+    async componentDidMount(): Promise<void> {
         const policies = new PoliciesModel();
         const bestPolicies = await policies.getBestPolicies();
         console.log(bestPolicies);
