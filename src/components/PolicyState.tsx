@@ -1,7 +1,9 @@
 import React from "react";
+import Scrollbars from "react-custom-scrollbars-2";
 import { PolicySchema } from "../models/Policy";
 import { Action } from "../utils/Enums";
 import Policy from "./Policy";
+import { Scrollbar } from "./Scrollbar";
 
 type PolicyStateProps = {
     state: number;
@@ -32,20 +34,26 @@ export default class PolicyState extends React.Component<PolicyStateProps, Polic
             allSchemas.push(schema);
         }
 
-        console.log(allSchemas);
-
         return (
-            <div className="flex flex-col">
-                {allSchemas.map((value, index) => (
-                    <div key={index} className="mb-4">
-                        {(value.action === Action[selectedAction] && 
-                            <Policy policy={value} isSelected showAction />
-                        ) || 
-                        (value.action !== Action[selectedAction] &&
-                            <Policy policy={value} showAction />
-                        )}
-                    </div>
-                ))}
+            <div className="flex flex-col flex-grow-default w-64 h-screen p-4">
+                <div className="flex flex-col items-center justify-center mb-4 h-12">
+                    <span className="text-xs" style={{marginBottom: "-0.75rem"}}>State</span>
+                    <span className="text-4xl font-medium">{state}</span>
+                </div>
+                <div className="flex flex-col h-full py-4 border-2 rounded-lg border-opacity-25">
+                    <Scrollbars autoHide autoHideTimeout={250} style={{width: "100%"}}>
+                        {allSchemas.map((value, index) => (
+                            <div key={index} className={`${index === allSchemas.length - 1 ? "" : "mb-4"}`}>
+                                {(value.action === Action[selectedAction] && 
+                                    <Policy policy={value} isSelected showAction />
+                                ) || 
+                                (value.action !== Action[selectedAction] &&
+                                    <Policy policy={value} showAction />
+                                )}
+                            </div>
+                        ))}
+                    </Scrollbars>
+                </div>
             </div>
         );
     }

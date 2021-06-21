@@ -23,7 +23,7 @@ export default class TestPage extends React.Component<TestPageProps, TestPageSta
     render(): JSX.Element {
         return (
             <div className="">
-                <PolicyState state={0} selectedAction={Action.rWon} />
+                <Policies />
             </div>
         );
     }
