@@ -55,7 +55,7 @@ export class DummyPoliciesModel implements IPoliciesModel {
             {state: 7, action: "bMID_NEXUS_TURRET", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
             {state: 8, action: "bWon", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
         ];
-
+        
         this.policies.policies = policySchemas;
     }
 

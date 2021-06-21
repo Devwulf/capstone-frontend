@@ -8,7 +8,8 @@ type PoliciesProps = {
 }
 
 type PoliciesState = {
-    policies: IPoliciesModel;
+    policiesModel: IPoliciesModel;
+    isLoading: boolean;
 }
 
 export default class Policies extends React.Component<PoliciesProps, PoliciesState> {
@@ -16,23 +17,25 @@ export default class Policies extends React.Component<PoliciesProps, PoliciesSta
         super(props);
 
         this.state = {
-            policies: new DummyPoliciesModel()
+            policiesModel: new DummyPoliciesModel(),
+            isLoading: true
         };
     }
 
     async componentDidMount(): Promise<void> {
-        await this.state.policies.retrieveBestPolicies();
+        await this.state.policiesModel.retrieveBestPolicies();
+        this.setState({isLoading: false});
     }
 
     render(): JSX.Element {
-        const { policies } = this.state;
-        const policySchemas = policies.getSchema().policies;
-
+        const { policiesModel } = this.state;
+        const policySchemas = policiesModel.getSchema().policies;
+        
         return (
-            <div className="flex flex-col">
+            <div className="flex flex-row">
                 {policySchemas.map((policy, index) => (
                     <div key={index} className="mb-4">
-                        <Policy policy={policy} />
+                        <Policy policy={policy} showAction />
                     </div>
                 ))}
             </div>

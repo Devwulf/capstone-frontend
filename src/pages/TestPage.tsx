@@ -1,5 +1,7 @@
 import React from "react";
 import Policies from "../components/Policies";
+import PolicyState from "../components/PolicyState";
+import { Action } from "../utils/Enums";
 
 type TestPageProps = {
 
@@ -21,7 +23,7 @@ export default class TestPage extends React.Component<TestPageProps, TestPageSta
     render(): JSX.Element {
         return (
             <div className="">
-                <Policies />
+                <PolicyState state={0} selectedAction={Action.rWon} />
             </div>
         );
     }
