@@ -11,7 +11,8 @@ type PoliciesProps = {
 }
 
 type PoliciesState = {
-    policiesModel: IPoliciesModel;
+    bestPolicies: IPoliciesModel;
+    nextPolicies: IPoliciesModel;
     isLoading: boolean;
 }
 
@@ -20,26 +21,37 @@ export default class Policies extends React.Component<PoliciesProps, PoliciesSta
         super(props);
 
         this.state = {
-            policiesModel: new DummyPoliciesModel(),
+            bestPolicies: new DummyPoliciesModel(),
+            nextPolicies: new DummyPoliciesModel(),
             isLoading: true
         };
     }
 
     async componentDidMount(): Promise<void> {
-        await this.state.policiesModel.retrieveBestPolicies();
+        await this.state.bestPolicies.retrieveBestPolicies();
+        await this.state.nextPolicies.retrieveNextPolicies();
         this.setState({isLoading: false});
     }
 
     render(): JSX.Element {
-        const { policiesModel } = this.state;
-        const policySchemas = policiesModel.getSchema().policies;
+        const { bestPolicies, nextPolicies } = this.state;
+        const bestSchemas = bestPolicies.getSchema().policies;
+        const nextSchemas = nextPolicies.getSchema().policies;
+        let nextState = 0;
+        if (nextSchemas.length > 0)
+            nextState = nextSchemas[0].state;
         
         return (
             <Scrollbars autoHide autoHideTimeout={250} style={{width: "100vw", height: "100vh"}}>
                 <div className="flex flex-row">
-                    {policySchemas.map((policy, index) => (
+                    {bestSchemas.map((policy, index) => (
                         <div key={index} className="">
-                            <PolicyState state={policy.state} selectedAction={Action[policy.action as keyof typeof Action]} />
+                            {(policy.state === nextState && 
+                                <PolicyState state={policy.state} selectedAction={policy} actions={nextSchemas} />
+                            ) ||
+                            (policy.state !== nextState &&
+                                <PolicyState state={policy.state} selectedAction={policy} />
+                            )}
                         </div>
                     ))}
                 </div>

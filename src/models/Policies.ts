@@ -8,6 +8,7 @@ export enum Team {
 
 export interface IPoliciesModel {
     retrieveBestPolicies(team?: Team, state?: number, actions?: string): Promise<void>;
+    retrieveNextPolicies(team?: Team, state?: number, action?: string): Promise<void>;
     getSchema(): PoliciesSchema;
 }
 
@@ -23,6 +24,18 @@ export class PoliciesModel implements IPoliciesModel {
         // Get policies from backend
         const policies: PolicySchema[] = [];
         const url = `${this.baseUrl}/best?team=${Team[team]}&state=${state}&actions=${actions}`;
+        const res = await axios.get<PoliciesSchema>(url);
+        res.data.policies.forEach(policy => {
+            policies.push(policy);
+        });
+
+        this.policies.policies = policies;
+    }
+
+    async retrieveNextPolicies(team: Team = Team.Blue, state = 0, action = "bKills"): Promise<void> {
+        // Get policies from backend
+        const policies: PolicySchema[] = [];
+        const url = `${this.baseUrl}/next?team=${Team[team]}&state=${state}&action=${action}`;
         const res = await axios.get<PoliciesSchema>(url);
         res.data.policies.forEach(policy => {
             policies.push(policy);
@@ -54,6 +67,20 @@ export class DummyPoliciesModel implements IPoliciesModel {
             {state: 6, action: "bMID_NEXUS_TURRET", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
             {state: 7, action: "bMID_NEXUS_TURRET", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
             {state: 8, action: "bWon", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
+        ];
+        
+        this.policies.policies = policySchemas;
+    }
+
+    async retrieveNextPolicies(team: Team = Team.Blue, state = 0, action = "bKills"): Promise<void> {
+        const policySchemas: PolicySchema[] = [
+            {state: 1, action: "bKills", probability: 1, qValue: 0, goldAdv: "Even"},
+            {state: 1, action: "rKills", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
+            {state: 1, action: "bMID_OUTER_TURRET", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
+            {state: 1, action: "bMID_INNER_TURRET", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
+            {state: 1, action: "bMID_BASE_TURRET", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
+            {state: 1, action: "bMID_INHIBITOR", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
+            {state: 1, action: "bMID_NEXUS_TURRET", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
         ];
         
         this.policies.policies = policySchemas;

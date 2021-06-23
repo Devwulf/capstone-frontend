@@ -7,7 +7,8 @@ import { Scrollbar } from "./Scrollbar";
 
 type PolicyStateProps = {
     state: number;
-    selectedAction: Action;
+    selectedAction: PolicySchema;
+    actions?: PolicySchema[];
 }
 
 type PolicyStateState = {
@@ -24,14 +25,19 @@ export default class PolicyState extends React.Component<PolicyStateProps, Polic
     }
 
     render(): JSX.Element {
-        const { state, selectedAction } = this.props;
-        const allSchemas: PolicySchema[] = [];
-        for (const value in Action) {
-            if (!isNaN(Number(value)))
-                continue;
-            
-            const schema: PolicySchema = { state: state, action: value, probability: 1, qValue: 0, goldAdv: "Even" };
-            allSchemas.push(schema);
+        const { state, selectedAction, actions = [] } = this.props;
+        const allSchemas: PolicySchema[] = actions;
+        if (actions.length <= 0) {
+            for (const value in Action) {
+                if (!isNaN(Number(value)))
+                    continue;
+                
+                const schema: PolicySchema = 
+                    selectedAction.action === value ? 
+                        selectedAction : 
+                        { state: state, action: value, probability: -1, qValue: -1, goldAdv: "" };
+                allSchemas.push(schema);
+            }
         }
 
         return (
@@ -43,12 +49,12 @@ export default class PolicyState extends React.Component<PolicyStateProps, Polic
                 <div className="flex flex-col h-full py-4 border-2 rounded-lg border-opacity-25">
                     <Scrollbars autoHide autoHideTimeout={250} style={{width: "100%"}}>
                         {allSchemas.map((value, index) => (
-                            <div key={index} className={`${index === allSchemas.length - 1 ? "" : "mb-4"}`}>
-                                {(value.action === Action[selectedAction] && 
-                                    <Policy policy={value} isSelected showAction />
+                            <div key={index} className={`${index === allSchemas.length - 1 ? "" : "mb-2"}`}>
+                                {(value.action === selectedAction.action && 
+                                    <Policy policy={value} isSelected showAction showProbability showQValue showGoldAdv />
                                 ) || 
-                                (value.action !== Action[selectedAction] &&
-                                    <Policy policy={value} showAction />
+                                (value.action !== selectedAction.action &&
+                                    <Policy policy={value} showAction showProbability showQValue showGoldAdv />
                                 )}
                             </div>
                         ))}
