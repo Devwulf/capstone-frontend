@@ -22,9 +22,9 @@ export default class Policies extends React.Component<PoliciesProps, PoliciesSta
         super(props);
 
         this.state = {
-            bestPolicies: new PoliciesModel(),
-            nextPolicies: new PoliciesModel(),
-            startPolicies: new PoliciesModel(),
+            bestPolicies: new DummyPoliciesModel(),
+            nextPolicies: new DummyPoliciesModel(),
+            startPolicies: new DummyPoliciesModel(),
             isLoading: true
         };
     }
@@ -47,8 +47,8 @@ export default class Policies extends React.Component<PoliciesProps, PoliciesSta
             
         
         return (
-            <Scrollbars autoHide autoHideTimeout={250} style={{width: "100vw", height: "100vh"}}>
-                <div className="flex flex-row">
+            <Scrollbars autoHide autoHideTimeout={250}>
+                <div className="flex flex-row h-full">
                     {bestSchemas.map((policy, index) => (
                         <div key={index} className="">
                             {(policy.state === nextState && 

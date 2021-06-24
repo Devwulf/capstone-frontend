@@ -1,0 +1,41 @@
+import React from "react";
+import Toggle from "react-toggle";
+import { Team } from "../models/Policies";
+import { TeamContext } from "../utils/Context";
+
+type ToggleTeamProps = {
+
+}
+
+type ToggleTeamState = {
+    isBlue: boolean;
+}
+
+export default class ToggleTeam extends React.Component<ToggleTeamProps, ToggleTeamState> {
+    constructor(props: ToggleTeamProps) {
+        super(props);
+
+        this.state = {
+            isBlue: true
+        };
+    }
+
+    render(): JSX.Element {
+        const { isBlue } = this.state;
+        return (
+            <TeamContext.Consumer>
+                {({team, setTeam}) => (
+                    <div className="flex p-4 w-screen h-16 items-center">
+                        <Toggle 
+                            icons={false}
+                            onChange={event => {
+                                const team = event.target.checked ? 
+                                    Team.Red : Team.Blue;
+                                setTeam(team);
+                            }} />
+                    </div>
+                )}
+            </TeamContext.Consumer>
+        );
+    }
+}

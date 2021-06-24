@@ -1,6 +1,8 @@
 import React from "react";
 import Scrollbars from "react-custom-scrollbars-2";
+import { Team } from "../models/Policies";
 import { PolicySchema } from "../models/Policy";
+import { TeamContext } from "../utils/Context";
 import { Action } from "../utils/Enums";
 import Policy from "./Policy";
 import { Scrollbar } from "./Scrollbar";
@@ -41,26 +43,30 @@ export default class PolicyState extends React.Component<PolicyStateProps, Polic
         }
 
         return (
-            <div className="flex flex-col flex-grow-default w-64 h-screen p-4">
-                <div className="flex flex-col items-center justify-center mb-4 h-12">
-                    <span className="text-xs" style={{marginBottom: "-0.75rem"}}>State</span>
-                    <span className="text-4xl font-medium">{state}</span>
-                </div>
-                <div className="flex flex-col h-full py-4 border-2 rounded-lg border-opacity-25">
-                    <Scrollbars autoHide autoHideTimeout={250} style={{width: "100%"}}>
-                        {allSchemas.map((value, index) => (
-                            <div key={index} className={`${index === allSchemas.length - 1 ? "" : "mb-2"}`}>
-                                {(value.action === selectedAction.action && 
-                                    <Policy policy={value} isSelected showAction showProbability showQValue showGoldAdv />
-                                ) || 
-                                (value.action !== selectedAction.action &&
-                                    <Policy policy={value} showAction showProbability showQValue showGoldAdv />
-                                )}
-                            </div>
-                        ))}
-                    </Scrollbars>
-                </div>
-            </div>
+            <TeamContext.Consumer>
+                {({team}) => (
+                    <div className={`flex flex-col w-64 h-full p-4 ${team === Team.Blue ? "text-blue-800" : "text-red-800"}`}>
+                        <div className="flex flex-col items-center justify-center mb-4 h-12">
+                            <span className="text-xs" style={{marginBottom: "-0.75rem"}}>State</span>
+                            <span className="text-4xl font-medium">{state}</span>
+                        </div>
+                        <div className="flex flex-col h-full py-4 border-2 rounded-lg border-opacity-25">
+                            <Scrollbars autoHide autoHideTimeout={250} style={{width: "100%"}}>
+                                {allSchemas.map((value, index) => (
+                                    <div key={index} className={`${index === allSchemas.length - 1 ? "" : "mb-2"}`}>
+                                        {(value.action === selectedAction.action && 
+                                            <Policy policy={value} isSelected showAction showProbability showQValue showGoldAdv />
+                                        ) || 
+                                        (value.action !== selectedAction.action &&
+                                            <Policy policy={value} showAction showProbability showQValue showGoldAdv />
+                                        )}
+                                    </div>
+                                ))}
+                            </Scrollbars>
+                        </div>
+                    </div>
+                )}
+            </TeamContext.Consumer>
         );
     }
 }
