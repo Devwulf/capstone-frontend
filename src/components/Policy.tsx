@@ -32,7 +32,6 @@ export default class Policy extends React.Component<PolicyProps, PolicyState> {
         const qValue = policy.qValue < 0 ? "-" : `${policy.qValue.toFixed(2)}`;
         const goldAdv = policy.goldAdv === "" ? "-" : policy.goldAdv;
         return (
-            
             <TeamContext.Consumer>
                 {({team}) => (
                     <div className={`flex flex-col items-center w-full ${isSelected ? (team === Team.Blue ? "bg-blue-600 text-blue-300" : "bg-red-600 text-red-300") : ""}`}>

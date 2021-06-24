@@ -70,7 +70,7 @@ export class DummyPoliciesModel implements IPoliciesModel {
     }
 
     async retrieveBestPolicies(team: Team = Team.Blue, state = 0, actions = "bKills"): Promise<void> {
-        const policySchemas: PolicySchema[] = [
+        const bluePolicySchemas: PolicySchema[] = [
             {state: 0, action: "bKills", probability: 1, qValue: 0, goldAdv: "Even"},
             {state: 1, action: "rKills", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
             {state: 2, action: "bMID_OUTER_TURRET", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
@@ -81,12 +81,24 @@ export class DummyPoliciesModel implements IPoliciesModel {
             {state: 7, action: "bMID_NEXUS_TURRET", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
             {state: 8, action: "bWon", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
         ];
+
+        const redPolicySchemas: PolicySchema[] = [
+            {state: 0, action: "rKills", probability: 1, qValue: 0, goldAdv: "Even"},
+            {state: 1, action: "bKills", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
+            {state: 2, action: "rMID_OUTER_TURRET", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
+            {state: 3, action: "rMID_INNER_TURRET", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
+            {state: 4, action: "rMID_BASE_TURRET", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
+            {state: 5, action: "rMID_INHIBITOR", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
+            {state: 6, action: "rMID_NEXUS_TURRET", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
+            {state: 7, action: "rMID_NEXUS_TURRET", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
+            {state: 8, action: "rWon", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
+        ];
         
-        this.policies.policies = policySchemas;
+        this.policies.policies = team === Team.Blue ? bluePolicySchemas : redPolicySchemas;
     }
 
     async retrieveNextPolicies(team: Team = Team.Blue, state = 0, action = "bKills"): Promise<void> {
-        const policySchemas: PolicySchema[] = [
+        const bluePolicySchemas: PolicySchema[] = [
             {state: 1, action: "bKills", probability: 1, qValue: 0, goldAdv: "Even"},
             {state: 1, action: "rKills", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
             {state: 1, action: "bMID_OUTER_TURRET", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
@@ -95,8 +107,18 @@ export class DummyPoliciesModel implements IPoliciesModel {
             {state: 1, action: "bMID_INHIBITOR", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
             {state: 1, action: "bMID_NEXUS_TURRET", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
         ];
+
+        const redPolicySchemas: PolicySchema[] = [
+            {state: 1, action: "bKills", probability: 1, qValue: 0, goldAdv: "Even"},
+            {state: 1, action: "rKills", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
+            {state: 1, action: "rMID_OUTER_TURRET", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
+            {state: 1, action: "rMID_INNER_TURRET", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
+            {state: 1, action: "rMID_BASE_TURRET", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
+            {state: 1, action: "rMID_INHIBITOR", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
+            {state: 1, action: "rMID_NEXUS_TURRET", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
+        ];
         
-        this.policies.policies = policySchemas;
+        this.policies.policies = team === Team.Blue ? bluePolicySchemas : redPolicySchemas;
     }
 
     async retrieveStartPolicies(team: Team = Team.Blue): Promise<void> {
