@@ -7,6 +7,7 @@ import { Action } from "../utils/Enums";
 import { setStateAsync } from "../utils/Helpers";
 import Policy from "./Policy";
 import PolicyState from "./PolicyState";
+import logo from "../logo.svg";
 
 type PoliciesProps = {
     
@@ -25,9 +26,9 @@ export default class Policies extends React.Component<PoliciesProps, PoliciesSta
         super(props);
 
         this.state = {
-            bestPolicies: new DummyPoliciesModel(),
-            nextPolicies: new DummyPoliciesModel(),
-            startPolicies: new DummyPoliciesModel(),
+            bestPolicies: new PoliciesModel(),
+            nextPolicies: new PoliciesModel(),
+            startPolicies: new PoliciesModel(),
             isLoading: true
         };
 
@@ -55,7 +56,7 @@ export default class Policies extends React.Component<PoliciesProps, PoliciesSta
     }
 
     render(): JSX.Element {
-        const { startPolicies, bestPolicies, nextPolicies } = this.state;
+        const { startPolicies, bestPolicies, nextPolicies, isLoading } = this.state;
         const startSchemas = startPolicies.getSchema().policies;
         const bestSchemas = bestPolicies.getSchema().policies;
         const nextSchemas = nextPolicies.getSchema().policies;
@@ -64,23 +65,33 @@ export default class Policies extends React.Component<PoliciesProps, PoliciesSta
             nextState = nextSchemas[0].state;
         
         return (
-            <Scrollbars autoHide autoHideTimeout={250}>
-                <div className="flex flex-row h-full">
-                    {bestSchemas.map((policy, index) => (
-                        <div key={index} className="">
-                            {(policy.state === nextState && 
-                                <PolicyState state={policy.state} selectedAction={policy} actions={nextSchemas} />
-                            ) ||
-                            (policy.state === 0 &&
-                                <PolicyState state={policy.state} selectedAction={policy} actions={startSchemas} />
-                            ) ||
-                            (policy.state !== nextState &&
-                                <PolicyState state={policy.state} selectedAction={policy} />
-                            )}
+            <div className="w-full h-full relative">
+                {(isLoading && 
+                    <div className="absolute top-0 right-0 bottom-0 left-0 flex flex-col items-center justify-center backdrop-filter backdrop-blur-sm z-10">
+                        <div className="p-4 bg-gray-800 rounded-md">
+                            <img src={logo} alt="logo" className="App-logo" />
+                            <span className="text-2xl text-blue-200">Loading</span>
                         </div>
-                    ))}
-                </div>
-            </Scrollbars>
+                    </div>
+                )}
+                <Scrollbars autoHide autoHideTimeout={250}>
+                    <div className="flex flex-row h-full">
+                        {bestSchemas.map((policy, index) => (
+                            <div key={index} className="">
+                                {(policy.state === nextState && 
+                                    <PolicyState state={policy.state} selectedAction={policy} actions={nextSchemas} />
+                                ) ||
+                                (policy.state === 0 &&
+                                    <PolicyState state={policy.state} selectedAction={policy} actions={startSchemas} />
+                                ) ||
+                                (policy.state !== nextState &&
+                                    <PolicyState state={policy.state} selectedAction={policy} />
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </Scrollbars>
+            </div>
         );
     }
 }

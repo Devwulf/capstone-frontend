@@ -34,7 +34,7 @@ export default class Policy extends React.Component<PolicyProps, PolicyState> {
         return (
             <TeamContext.Consumer>
                 {({team}) => (
-                    <div className={`flex flex-col items-center w-full ${isSelected ? (team === Team.Blue ? "bg-blue-600 text-blue-300" : "bg-red-600 text-red-300") : ""}`}>
+                    <div className={`flex flex-col items-center w-full ${isSelected ? (team === Team.Blue ? "bg-blue-600 text-blue-200" : "bg-red-600 text-red-200") : ""}`}>
                         <span className={`${showState ? "" : "hidden"}`}>{policy.state}</span>
                         <span className={`${showAction ? "text-sm" : "hidden"}`}>{policy.action}</span>
                         <div className="flex flex-row">
