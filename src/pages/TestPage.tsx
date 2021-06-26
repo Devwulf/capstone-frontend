@@ -59,7 +59,7 @@ export default class TestPage extends React.Component<TestPageProps, TestPageSta
         const { team } = this.state;
         return (
             <TeamContext.Provider value={{team: team, setTeam: this.setTeam, addListener: this.addListener, removeListener: this.removeListener}}>
-                <div className={`transition-default duration-200 ease-in-out flex flex-col w-screen h-screen ${team === Team.Blue ? "bg-blue-300" : "bg-red-300"}`}>
+                <div className={`transition-default duration-500 ease-in-out flex flex-col w-screen h-screen ${team === Team.Blue ? "bg-blue-300" : "bg-red-300"}`}>
                     <ToggleTeam />
                     <Policies />
                 </div>

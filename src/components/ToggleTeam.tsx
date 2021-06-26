@@ -8,7 +8,7 @@ type ToggleTeamProps = {
 }
 
 type ToggleTeamState = {
-    isBlue: boolean;
+    
 }
 
 export default class ToggleTeam extends React.Component<ToggleTeamProps, ToggleTeamState> {
@@ -16,12 +16,11 @@ export default class ToggleTeam extends React.Component<ToggleTeamProps, ToggleT
         super(props);
 
         this.state = {
-            isBlue: true
+            
         };
     }
 
     render(): JSX.Element {
-        const { isBlue } = this.state;
         return (
             <TeamContext.Consumer>
                 {({team, setTeam}) => (

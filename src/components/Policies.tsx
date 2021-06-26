@@ -26,9 +26,9 @@ export default class Policies extends React.Component<PoliciesProps, PoliciesSta
         super(props);
 
         this.state = {
-            bestPolicies: new PoliciesModel(),
-            nextPolicies: new PoliciesModel(),
-            startPolicies: new PoliciesModel(),
+            bestPolicies: new DummyPoliciesModel(),
+            nextPolicies: new DummyPoliciesModel(),
+            startPolicies: new DummyPoliciesModel(),
             isLoading: true
         };
 
