@@ -17,7 +17,7 @@ type PoliciesState = {
     currentPolicies: IPoliciesModel;
     bestPolicies: IPoliciesModel;
     nextPolicies: IPoliciesModel;
-    startPolicies: IPoliciesModel;
+    pastPolicies: PoliciesSchema[];
     isLoading: boolean;
 }
 
@@ -28,10 +28,10 @@ export default class Policies extends React.Component<PoliciesProps, PoliciesSta
 
         const policies: PoliciesSchema = {policies: [{state: 0, action: "bKills", probability: 1, qValue: 0, goldAdv: "Even"}]};
         this.state = {
-            currentPolicies: new DummyPoliciesModel(),
-            bestPolicies: new DummyPoliciesModel(),
-            nextPolicies: new DummyPoliciesModel(),
-            startPolicies: new DummyPoliciesModel(),
+            currentPolicies: new PoliciesModel(),
+            bestPolicies: new PoliciesModel(),
+            nextPolicies: new PoliciesModel(),
+            pastPolicies: [],
             isLoading: true
         };
 
@@ -42,26 +42,27 @@ export default class Policies extends React.Component<PoliciesProps, PoliciesSta
     async componentDidMount(): Promise<void> {
         this.context.addListener("policies", this.onTeamChanged);
 
-        await this.state.startPolicies.retrieveStartPolicies();
+        await this.state.nextPolicies.retrieveStartPolicies();
         await setStateAsync({isLoading: false}, this);
     }
 
     async onTeamChanged(team: Team): Promise<void> {
-        await setStateAsync({isLoading: true}, this);
+        await setStateAsync({isLoading: true, pastPolicies: []}, this);
         await this.state.currentPolicies.clearPolicies();
-        await this.state.bestPolicies.retrieveBestPolicies(team, 0, "rTOP_OUTER_TURRET");
-        await this.state.nextPolicies.retrieveNextPolicies(team, 0, "rTOP_OUTER_TURRET");
+        await this.state.bestPolicies.clearPolicies();
+        await this.state.nextPolicies.retrieveStartPolicies();
         await setStateAsync({isLoading: false}, this);
     }
 
     async onChoosePolicy(team: Team, policy: PolicySchema): Promise<void> {
-        const { currentPolicies, bestPolicies, nextPolicies } = this.state;
+        const { pastPolicies, currentPolicies, bestPolicies, nextPolicies } = this.state;
 
-        await setStateAsync({isLoading: true}, this);
+        const policiesArr = pastPolicies.concat({policies: nextPolicies.getSchema().policies});
+        await setStateAsync({isLoading: true, pastPolicies: policiesArr}, this);
+
         currentPolicies.addPolicy(policy);
 
         const currentState = currentPolicies.getSchema().policies.length - 1;
-
         if (currentState >= 0) {
             await bestPolicies.retrieveBestPolicies(team, currentState, policy.action);
             await nextPolicies.retrieveNextPolicies(team, currentState, policy.action);
@@ -75,9 +76,8 @@ export default class Policies extends React.Component<PoliciesProps, PoliciesSta
     }
 
     render(): JSX.Element {
-        const { currentPolicies, startPolicies, bestPolicies, nextPolicies, isLoading } = this.state;
+        const { pastPolicies, currentPolicies, bestPolicies, nextPolicies, isLoading } = this.state;
         const currentSchemas = currentPolicies.getSchema().policies;
-        const startSchemas = startPolicies.getSchema().policies;
         const bestSchemas = bestPolicies.getSchema().policies;
         const nextSchemas = nextPolicies.getSchema().policies;
         const allSchemas = [];
@@ -102,7 +102,7 @@ export default class Policies extends React.Component<PoliciesProps, PoliciesSta
                     <Scrollbars autoHide autoHideTimeout={250}>
                         <div className="flex flex-row h-full">
                             {(currentSchemas.length <= 0 &&
-                                <PolicyState state={0} actions={startSchemas} />
+                                <PolicyState state={0} actions={nextSchemas} />
                             ) ||
                             (currentSchemas.length > 0 && 
                                 <>
@@ -111,7 +111,10 @@ export default class Policies extends React.Component<PoliciesProps, PoliciesSta
                                             {(policy.state === nextState && 
                                                 <PolicyState state={policy.state} selectedAction={policy} actions={nextSchemas} />
                                             ) ||
-                                            (policy.state !== nextState &&
+                                            (policy.state !== nextState && index < pastPolicies.length &&
+                                                <PolicyState state={policy.state} selectedAction={policy} actions={pastPolicies[index].policies} isDisabled />
+                                            ) ||
+                                            (policy.state !== nextState && index >= pastPolicies.length &&
                                                 <PolicyState state={policy.state} selectedAction={policy} />
                                             )}
                                         </div>

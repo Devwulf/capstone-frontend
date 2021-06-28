@@ -2,7 +2,7 @@ import React from "react";
 import Scrollbars from "react-custom-scrollbars-2";
 import { Team } from "../models/Policies";
 import { PolicySchema } from "../models/Policy";
-import { TeamContext } from "../utils/Context";
+import { PolicyContext, TeamContext } from "../utils/Context";
 import { Action } from "../utils/Enums";
 import Policy from "./Policy";
 import { Scrollbar } from "./Scrollbar";
@@ -11,23 +11,25 @@ type PolicyStateProps = {
     state: number;
     selectedAction?: PolicySchema;
     actions?: PolicySchema[];
+    isDisabled?: boolean;
 }
 
 type PolicyStateState = {
-
+    
 }
 
 export default class PolicyState extends React.Component<PolicyStateProps, PolicyStateState> {
+    static contextType = PolicyContext;
     constructor(props: PolicyStateProps) {
         super(props);
 
         this.state = {
-
+            
         };
     }
 
     render(): JSX.Element {
-        const { state, selectedAction, actions = [] } = this.props;
+        const { state, selectedAction, actions = [], isDisabled = false } = this.props;
         const allSchemas: PolicySchema[] = actions;
         if (actions.length <= 0) {
             for (const value in Action) {
@@ -54,12 +56,13 @@ export default class PolicyState extends React.Component<PolicyStateProps, Polic
                             <Scrollbars autoHide autoHideTimeout={250} style={{width: "100%"}}>
                                 {allSchemas.map((value, index) => (
                                     <div key={index} className={`${index === allSchemas.length - 1 ? "" : "mb-2"}`}>
-                                        {(selectedAction !== undefined && value.action === selectedAction.action && 
-                                            <Policy policy={value} isSelected showAction showProbability showQValue showGoldAdv />
-                                        ) || 
-                                        ((selectedAction === undefined || value.action !== selectedAction.action) &&
-                                            <Policy policy={value} showAction showProbability showQValue showGoldAdv />
-                                        )}
+                                        <Policy policy={value} 
+                                            isSelected={selectedAction !== undefined && value.action === selectedAction.action} 
+                                            isDisabled={isDisabled}
+                                            showAction 
+                                            showProbability 
+                                            showQValue 
+                                            showGoldAdv />
                                     </div>
                                 ))}
                             </Scrollbars>

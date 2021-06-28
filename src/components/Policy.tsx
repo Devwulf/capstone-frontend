@@ -6,6 +6,7 @@ import { PolicyContext, TeamContext } from "../utils/Context";
 type PolicyProps = {
     policy: PolicySchema;
     isSelected?: boolean;
+    isDisabled?: boolean;
     showState?: boolean;
     showAction?: boolean;
     showProbability?: boolean;
@@ -27,7 +28,7 @@ export default class Policy extends React.Component<PolicyProps, PolicyState> {
     }
 
     render(): JSX.Element {
-        const { policy, isSelected = false, showState = false, showAction = false, showProbability = false, showQValue = false, showGoldAdv = false } = this.props;
+        const { policy, isSelected = false, isDisabled = false, showState = false, showAction = false, showProbability = false, showQValue = false, showGoldAdv = false } = this.props;
         const probability = policy.probability < 0 ? "-" : `${(policy.probability * 100).toFixed(2)}%`;
         const qValue = policy.qValue < 0 ? "-" : `${policy.qValue.toFixed(2)}`;
         const goldAdv = policy.goldAdv === "" ? "-" : policy.goldAdv;
@@ -36,8 +37,9 @@ export default class Policy extends React.Component<PolicyProps, PolicyState> {
                 {({team}) => (
                     <PolicyContext.Consumer>
                         {({choosePolicy}) => (
-                            <div className={`flex flex-col items-center w-full cursor-pointer ${isSelected ? (team === Team.Blue ? "bg-blue-600 text-blue-200" : "bg-red-600 text-red-200") : ""}`}
-                                onClick={() => choosePolicy(team, policy)}>
+                            <button className={`flex flex-col items-center w-full ${isSelected ? (team === Team.Blue ? "bg-blue-600 text-blue-200" : "bg-red-600 text-red-200") : ""} ${isDisabled ? "opacity-50 cursor-default" : ""}`}
+                                onClick={() => choosePolicy(team, policy)}
+                                disabled={isDisabled}>
                                 <span className={`${showState ? "" : "hidden"}`}>{policy.state}</span>
                                 <span className={`${showAction ? "text-sm" : "hidden"}`}>{policy.action}</span>
                                 <div className="flex flex-row">
@@ -54,7 +56,7 @@ export default class Policy extends React.Component<PolicyProps, PolicyState> {
                                         <span className="text-sm">{goldAdv}</span>
                                     </div>
                                 </div>
-                            </div>
+                            </button>
                         )}
                     </PolicyContext.Consumer>
                 )}
