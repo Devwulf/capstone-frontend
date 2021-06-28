@@ -1,5 +1,6 @@
 import React from "react";
 import { Team } from "../models/Policies";
+import { PolicySchema } from "../models/Policy";
 
 export type TeamContextType = {
     team: Team;
@@ -13,4 +14,12 @@ export const TeamContext = React.createContext<TeamContextType>({
     setTeam: team => { return; },
     addListener: (name, listener) => { return; },
     removeListener: (name) => { return; }
+});
+
+export type PolicyContextType = {
+    choosePolicy: (team: Team, policy: PolicySchema) => Promise<void>;
+}
+
+export const PolicyContext = React.createContext<PolicyContextType>({
+    choosePolicy: async (team, policy) => { return; }
 });

@@ -20,7 +20,6 @@ type TeamListener = {
 }
 
 export default class TestPage extends React.Component<TestPageProps, TestPageState> {
-    static contextType = TeamContext;
     private listeners: TeamListener[] = [];
     constructor(props: TestPageProps) {
         super(props);

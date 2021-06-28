@@ -9,7 +9,7 @@ import { Scrollbar } from "./Scrollbar";
 
 type PolicyStateProps = {
     state: number;
-    selectedAction: PolicySchema;
+    selectedAction?: PolicySchema;
     actions?: PolicySchema[];
 }
 
@@ -35,7 +35,7 @@ export default class PolicyState extends React.Component<PolicyStateProps, Polic
                     continue;
                 
                 const schema: PolicySchema = 
-                    selectedAction.action === value ? 
+                    selectedAction !== undefined && selectedAction.action === value ? 
                         selectedAction : 
                         { state: state, action: value, probability: -1, qValue: -1, goldAdv: "" };
                 allSchemas.push(schema);
@@ -54,10 +54,10 @@ export default class PolicyState extends React.Component<PolicyStateProps, Polic
                             <Scrollbars autoHide autoHideTimeout={250} style={{width: "100%"}}>
                                 {allSchemas.map((value, index) => (
                                     <div key={index} className={`${index === allSchemas.length - 1 ? "" : "mb-2"}`}>
-                                        {(value.action === selectedAction.action && 
+                                        {(selectedAction !== undefined && value.action === selectedAction.action && 
                                             <Policy policy={value} isSelected showAction showProbability showQValue showGoldAdv />
                                         ) || 
-                                        (value.action !== selectedAction.action &&
+                                        ((selectedAction === undefined || value.action !== selectedAction.action) &&
                                             <Policy policy={value} showAction showProbability showQValue showGoldAdv />
                                         )}
                                     </div>

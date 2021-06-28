@@ -1,7 +1,7 @@
 import React from "react";
 import { Team } from "../models/Policies";
 import { PolicySchema } from "../models/Policy";
-import { TeamContext } from "../utils/Context";
+import { PolicyContext, TeamContext } from "../utils/Context";
 
 type PolicyProps = {
     policy: PolicySchema;
@@ -34,24 +34,29 @@ export default class Policy extends React.Component<PolicyProps, PolicyState> {
         return (
             <TeamContext.Consumer>
                 {({team}) => (
-                    <div className={`flex flex-col items-center w-full ${isSelected ? (team === Team.Blue ? "bg-blue-600 text-blue-200" : "bg-red-600 text-red-200") : ""}`}>
-                        <span className={`${showState ? "" : "hidden"}`}>{policy.state}</span>
-                        <span className={`${showAction ? "text-sm" : "hidden"}`}>{policy.action}</span>
-                        <div className="flex flex-row">
-                            <div className={`${showProbability ? "flex flex-col mr-4" : "hidden"}`}>
-                                <span className="text-xs">Probability</span>
-                                <span className="text-sm">{probability}</span>
+                    <PolicyContext.Consumer>
+                        {({choosePolicy}) => (
+                            <div className={`flex flex-col items-center w-full cursor-pointer ${isSelected ? (team === Team.Blue ? "bg-blue-600 text-blue-200" : "bg-red-600 text-red-200") : ""}`}
+                                onClick={() => choosePolicy(team, policy)}>
+                                <span className={`${showState ? "" : "hidden"}`}>{policy.state}</span>
+                                <span className={`${showAction ? "text-sm" : "hidden"}`}>{policy.action}</span>
+                                <div className="flex flex-row">
+                                    <div className={`${showProbability ? "flex flex-col mr-4" : "hidden"}`}>
+                                        <span className="text-xs">Probability</span>
+                                        <span className="text-sm">{probability}</span>
+                                    </div>
+                                    <div className={`${showQValue ? "flex flex-col mr-4" : "hidden"}`}>
+                                        <span className="text-xs">Q-Value</span>
+                                        <span className="text-sm">{qValue}</span>
+                                    </div>
+                                    <div className={`${showGoldAdv ? "flex flex-col" : "hidden"}`}>
+                                        <span className="text-xs">Gold Adv</span>
+                                        <span className="text-sm">{goldAdv}</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div className={`${showQValue ? "flex flex-col mr-4" : "hidden"}`}>
-                                <span className="text-xs">Q-Value</span>
-                                <span className="text-sm">{qValue}</span>
-                            </div>
-                            <div className={`${showGoldAdv ? "flex flex-col" : "hidden"}`}>
-                                <span className="text-xs">Gold Adv</span>
-                                <span className="text-sm">{goldAdv}</span>
-                            </div>
-                        </div>
-                    </div>
+                        )}
+                    </PolicyContext.Consumer>
                 )}
             </TeamContext.Consumer>
         );
