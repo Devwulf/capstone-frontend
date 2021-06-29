@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import Scrollbars from "react-custom-scrollbars-2";
 import { DummyPoliciesModel, IPoliciesModel, PoliciesModel, PoliciesSchema, Team } from "../models/Policies";
 import { PolicyModel, PolicySchema } from "../models/Policy";
-import { PolicyContext, TeamContext } from "../utils/Context";
+import { AccuracyContext, AccuracyContextType, PolicyContext, TeamContext, TeamContextType } from "../utils/Context";
 import { Action } from "../utils/Enums";
 import { setStateAsync } from "../utils/Helpers";
 import Policy from "./Policy";
@@ -10,7 +10,8 @@ import PolicyState from "./PolicyState";
 import logo from "../logo.svg";
 
 type PoliciesProps = {
-    
+    teamContext: TeamContextType;
+    accuracyContext: AccuracyContextType;
 }
 
 type PoliciesState = {
@@ -19,20 +20,20 @@ type PoliciesState = {
     nextPolicies: IPoliciesModel;
     pastPolicies: PoliciesSchema[];
     isLoading: boolean;
+    correctCount: number;
 }
 
-export default class Policies extends React.Component<PoliciesProps, PoliciesState> {
-    static contextType = TeamContext;
+class PoliciesInner extends React.Component<PoliciesProps, PoliciesState> {
     constructor(props: PoliciesProps) {
         super(props);
 
-        const policies: PoliciesSchema = {policies: [{state: 0, action: "bKills", probability: 1, qValue: 0, goldAdv: "Even"}]};
         this.state = {
-            currentPolicies: new PoliciesModel(),
-            bestPolicies: new PoliciesModel(),
-            nextPolicies: new PoliciesModel(),
+            currentPolicies: new DummyPoliciesModel(),
+            bestPolicies: new DummyPoliciesModel(),
+            nextPolicies: new DummyPoliciesModel(),
             pastPolicies: [],
-            isLoading: true
+            isLoading: true,
+            correctCount: 0
         };
 
         this.onTeamChanged = this.onTeamChanged.bind(this);
@@ -40,7 +41,7 @@ export default class Policies extends React.Component<PoliciesProps, PoliciesSta
     }
 
     async componentDidMount(): Promise<void> {
-        this.context.addListener("policies", this.onTeamChanged);
+        this.props.teamContext.addListener("policies", this.onTeamChanged);
 
         await this.state.nextPolicies.retrieveStartPolicies();
         await setStateAsync({isLoading: false}, this);
@@ -55,14 +56,26 @@ export default class Policies extends React.Component<PoliciesProps, PoliciesSta
     }
 
     async onChoosePolicy(team: Team, policy: PolicySchema): Promise<void> {
-        const { pastPolicies, currentPolicies, bestPolicies, nextPolicies } = this.state;
-
-        const policiesArr = pastPolicies.concat({policies: nextPolicies.getSchema().policies});
-        await setStateAsync({isLoading: true, pastPolicies: policiesArr}, this);
+        const { accuracyContext } = this.props;
+        const { pastPolicies, currentPolicies, bestPolicies, nextPolicies, correctCount } = this.state;
 
         currentPolicies.addPolicy(policy);
 
-        const currentState = currentPolicies.getSchema().policies.length - 1;
+        const bestSchemas = bestPolicies.getSchema().policies;
+        const currentSchemas = currentPolicies.getSchema().policies;
+
+        // For counting how many times the best policy got a right prediction
+        let count = correctCount;
+        if (bestSchemas.length > 1 && policy.action === bestSchemas[1].action)
+            count++;
+
+        if (currentSchemas.length > 1)
+            accuracyContext.setAccuracy(count / (currentSchemas.length - 1));
+
+        const policiesArr = pastPolicies.concat({policies: nextPolicies.getSchema().policies});
+        await setStateAsync({isLoading: true, pastPolicies: policiesArr, correctCount: count}, this);
+
+        const currentState = currentSchemas.length - 1;
         if (currentState >= 0) {
             await bestPolicies.retrieveBestPolicies(team, currentState, policy.action);
             await nextPolicies.retrieveNextPolicies(team, currentState, policy.action);
@@ -72,7 +85,7 @@ export default class Policies extends React.Component<PoliciesProps, PoliciesSta
     }
 
     componentWillUnmount(): void {
-        this.context.removeListener("policies");
+        this.props.teamContext.removeListener("policies");
     }
 
     render(): JSX.Element {
@@ -127,4 +140,13 @@ export default class Policies extends React.Component<PoliciesProps, PoliciesSta
             </PolicyContext.Provider>  
         );
     }
+}
+
+export default function Policies(): JSX.Element {
+    const team = useContext(TeamContext);
+    const accuracy = useContext(AccuracyContext);
+
+    return (
+        <PoliciesInner teamContext={team} accuracyContext={accuracy} />
+    );
 }

@@ -24,7 +24,7 @@ export default class ToggleTeam extends React.Component<ToggleTeamProps, ToggleT
         return (
             <TeamContext.Consumer>
                 {({team, setTeam}) => (
-                    <div className="flex p-4 w-screen h-16 items-center">
+                    <div className="flex items-center">
                         <label htmlFor="" className="flex items-center">
                             <span className={`text-lg font-bold mr-2 ${team === Team.Blue ? "text-blue-900" : "text-red-900"}`}>Team</span>
                             <Toggle 

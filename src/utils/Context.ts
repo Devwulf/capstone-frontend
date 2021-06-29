@@ -23,3 +23,15 @@ export type PolicyContextType = {
 export const PolicyContext = React.createContext<PolicyContextType>({
     choosePolicy: async (team, policy) => { return; }
 });
+
+export type AccuracyContextType = {
+    setAccuracy: (accuracy: number) => Promise<void>;
+    addListener: (name: string, listener: (accuracy: number) => Promise<void>) => void;
+    removeListener: (name: string) => void;
+}
+
+export const AccuracyContext = React.createContext<AccuracyContextType>({
+    setAccuracy: async accuracy => { return; },
+    addListener: (name, listener) => { return; },
+    removeListener: (name) => { return; }
+});
