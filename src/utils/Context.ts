@@ -35,3 +35,19 @@ export const AccuracyContext = React.createContext<AccuracyContextType>({
     addListener: (name, listener) => { return; },
     removeListener: (name) => { return; }
 });
+
+export type SearchContextType = {
+    searchStr: string;
+    setSearchStr: (searchStr: string) => void;
+    searchAction: () => Promise<void>;
+    addActionListener: (name: string, listener: (searchStr: string) => Promise<void>) => void;
+    removeActionListener: (name: string) => void;
+}
+
+export const SearchContext = React.createContext<SearchContextType>({
+    searchStr: "",
+    setSearchStr: searchStr => { return; },
+    searchAction: async () => { return; },
+    addActionListener: (name, listener) => { return; },
+    removeActionListener: (name) => { return; }
+});

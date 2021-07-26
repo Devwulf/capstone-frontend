@@ -1,5 +1,6 @@
 import React from "react";
 import { AccuracyContext } from "../utils/Context";
+import Searchbar from "./Searchbar";
 import ToggleTeam from "./ToggleTeam";
 
 type TopBarProps = {
@@ -37,10 +38,12 @@ export default class TopBar extends React.Component<TopBarProps, TopBarState> {
     render(): JSX.Element {
         const { accuracy } = this.state;
         return (
-            <div className="flex justify-between w-screen h-16 p-4">
+            <div className="flex justify-between w-screen h-20 p-4">
                 <ToggleTeam />
-                <div className="flex items-center">
-                    <span className="font-medium">Model Accuracy: {(accuracy * 100).toFixed(2)}%</span>
+                <Searchbar />
+                <div className="flex flex-col items-end justify-center w-40">
+                    <span className="text-sm">Model Accuracy:</span>
+                    <span className="text-sm font-bold">{(accuracy * 100).toFixed(2)}%</span>
                 </div>
             </div>
         );

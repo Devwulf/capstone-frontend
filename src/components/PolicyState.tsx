@@ -48,9 +48,9 @@ export default class PolicyState extends React.Component<PolicyStateProps, Polic
             <TeamContext.Consumer>
                 {({team}) => (
                     <div className="flex flex-col w-64 h-full p-4">
-                        <div className={`flex flex-col items-center justify-center mb-4 h-12 ${team === Team.Blue ? "text-blue-900" : "text-red-900"}`}>
-                            <span className="text-xs" style={{marginBottom: "-0.75rem"}}>State</span>
-                            <span className="text-4xl font-medium">{state}</span>
+                        <div className={`flex flex-col items-center justify-center mb-2 h-12 ${team === Team.Blue ? "text-blue-900" : "text-red-900"}`}>
+                            <span className="text-xs" style={{marginBottom: "-0.5rem"}}>Action</span>
+                            <span className="text-2xl font-medium">{state + 1}</span>
                         </div>
                         <div className={`flex flex-col h-full py-4 border-2 shadow-lg rounded-lg bg-gray-100 ${team === Team.Blue ? "border-blue-800" : "border-red-800"}`}>
                             <Scrollbars autoHide autoHideTimeout={250} style={{width: "100%"}}>
