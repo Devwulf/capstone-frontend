@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import Scrollbars from "react-custom-scrollbars-2";
 import { DummyPoliciesModel, IPoliciesModel, PoliciesModel, PoliciesSchema, Team } from "../models/Policies";
 import { PolicyModel, PolicySchema } from "../models/Policy";
-import { AccuracyContext, AccuracyContextType, PolicyContext, TeamContext, TeamContextType } from "../utils/Context";
+import { AccuracyContext, AccuracyContextType, AuthContext, AuthContextType, PolicyContext, TeamContext, TeamContextType } from "../utils/Context";
 import { Action } from "../utils/Enums";
 import { setStateAsync } from "../utils/Helpers";
 import Policy from "./Policy";
@@ -12,6 +12,7 @@ import logo from "../logo.svg";
 type PoliciesProps = {
     teamContext: TeamContextType;
     accuracyContext: AccuracyContextType;
+    authContext: AuthContextType;
 }
 
 type PoliciesState = {
@@ -28,9 +29,9 @@ class PoliciesInner extends React.Component<PoliciesProps, PoliciesState> {
         super(props);
 
         this.state = {
-            currentPolicies: new DummyPoliciesModel(),
-            bestPolicies: new DummyPoliciesModel(),
-            nextPolicies: new DummyPoliciesModel(),
+            currentPolicies: new PoliciesModel(),
+            bestPolicies: new PoliciesModel(),
+            nextPolicies: new PoliciesModel(),
             pastPolicies: [],
             isLoading: true,
             correctCount: 0
@@ -43,7 +44,7 @@ class PoliciesInner extends React.Component<PoliciesProps, PoliciesState> {
     async componentDidMount(): Promise<void> {
         this.props.teamContext.addListener("policies", this.onTeamChanged);
 
-        await this.state.nextPolicies.retrieveStartPolicies();
+        await this.state.nextPolicies.retrieveStartPolicies(this.props.authContext.token);
         await setStateAsync({isLoading: false}, this);
     }
 
@@ -51,12 +52,12 @@ class PoliciesInner extends React.Component<PoliciesProps, PoliciesState> {
         await setStateAsync({isLoading: true, pastPolicies: []}, this);
         await this.state.currentPolicies.clearPolicies();
         await this.state.bestPolicies.clearPolicies();
-        await this.state.nextPolicies.retrieveStartPolicies();
+        await this.state.nextPolicies.retrieveStartPolicies(this.props.authContext.token);
         await setStateAsync({isLoading: false}, this);
     }
 
     async onChoosePolicy(team: Team, policy: PolicySchema): Promise<void> {
-        const { accuracyContext } = this.props;
+        const { accuracyContext, authContext } = this.props;
         const { pastPolicies, currentPolicies, bestPolicies, nextPolicies, correctCount } = this.state;
 
         currentPolicies.addPolicy(policy);
@@ -77,8 +78,8 @@ class PoliciesInner extends React.Component<PoliciesProps, PoliciesState> {
 
         const currentState = currentSchemas.length - 1;
         if (currentState >= 0) {
-            await bestPolicies.retrieveBestPolicies(team, currentState, policy.action);
-            await nextPolicies.retrieveNextPolicies(team, currentState, policy.action);
+            await bestPolicies.retrieveBestPolicies(authContext.token, team, currentState, policy.action);
+            await nextPolicies.retrieveNextPolicies(authContext.token, team, currentState, policy.action);
         }
 
         await setStateAsync({isLoading: false}, this);
@@ -145,8 +146,9 @@ class PoliciesInner extends React.Component<PoliciesProps, PoliciesState> {
 export default function Policies(): JSX.Element {
     const team = useContext(TeamContext);
     const accuracy = useContext(AccuracyContext);
+    const auth = useContext(AuthContext);
 
     return (
-        <PoliciesInner teamContext={team} accuracyContext={accuracy} />
+        <PoliciesInner teamContext={team} accuracyContext={accuracy} authContext={auth} />
     );
 }

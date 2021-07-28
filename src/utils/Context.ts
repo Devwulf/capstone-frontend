@@ -51,3 +51,13 @@ export const SearchContext = React.createContext<SearchContextType>({
     addActionListener: (name, listener) => { return; },
     removeActionListener: (name) => { return; }
 });
+
+export type AuthContextType = {
+    token: string;
+    setToken: (token: string) => void;
+}
+
+export const AuthContext = React.createContext<AuthContextType>({
+    token: "",
+    setToken: token => { return; }
+});

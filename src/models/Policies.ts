@@ -7,9 +7,9 @@ export enum Team {
 }
 
 export interface IPoliciesModel {
-    retrieveBestPolicies(team?: Team, state?: number, actions?: string): Promise<void>;
-    retrieveNextPolicies(team?: Team, state?: number, action?: string): Promise<void>;
-    retrieveStartPolicies(team?: Team): Promise<void>;
+    retrieveBestPolicies(token: string, team?: Team, state?: number, actions?: string): Promise<void>;
+    retrieveNextPolicies(token: string, team?: Team, state?: number, action?: string): Promise<void>;
+    retrieveStartPolicies(token: string, team?: Team): Promise<void>;
     addPolicy(policy: PolicySchema): void;
     clearPolicies(): void;
     getSchema(): PoliciesSchema;
@@ -23,11 +23,15 @@ export class PoliciesModel implements IPoliciesModel {
         this.policies = policies;
     }
 
-    async retrieveBestPolicies(team: Team = Team.Blue, state = 0, actions = "bKills"): Promise<void> {
+    async retrieveBestPolicies(token: string, team: Team = Team.Blue, state = 0, actions = "bKills"): Promise<void> {
         // Get policies from backend
         const policies: PolicySchema[] = [];
         const url = `${this.baseUrl}/best?team=${Team[team]}&state=${state}&actions=${actions}`;
-        const res = await axios.get<PoliciesSchema>(url);
+        const res = await axios.get<PoliciesSchema>(url, {
+            headers: {
+                "X-Access-Tokens": token
+            }
+        });
         res.data.policies.forEach(policy => {
             policies.push(policy);
         });
@@ -35,11 +39,15 @@ export class PoliciesModel implements IPoliciesModel {
         this.policies.policies = policies;
     }
 
-    async retrieveNextPolicies(team: Team = Team.Blue, state = 0, action = "bKills"): Promise<void> {
+    async retrieveNextPolicies(token: string, team: Team = Team.Blue, state = 0, action = "bKills"): Promise<void> {
         // Get policies from backend
         const policies: PolicySchema[] = [];
         const url = `${this.baseUrl}/next?team=${Team[team]}&state=${state}&action=${action}`;
-        const res = await axios.get<PoliciesSchema>(url);
+        const res = await axios.get<PoliciesSchema>(url, {
+            headers: {
+                "X-Access-Tokens": token
+            }
+        });
         res.data.policies.forEach(policy => {
             policies.push(policy);
         });
@@ -47,11 +55,15 @@ export class PoliciesModel implements IPoliciesModel {
         this.policies.policies = policies;
     }
 
-    async retrieveStartPolicies(team: Team = Team.Blue): Promise<void> {
+    async retrieveStartPolicies(token: string, team: Team = Team.Blue): Promise<void> {
         // Get policies from backend
         const policies: PolicySchema[] = [];
         const url = `${this.baseUrl}/start?team=${Team[team]}`;
-        const res = await axios.get<PoliciesSchema>(url);
+        const res = await axios.get<PoliciesSchema>(url, {
+            headers: {
+                "X-Access-Tokens": token
+            }
+        });
         res.data.policies.forEach(policy => {
             policies.push(policy);
         });
@@ -80,7 +92,7 @@ export class DummyPoliciesModel implements IPoliciesModel {
         this.policies = policies;
     }
 
-    async retrieveBestPolicies(team: Team = Team.Blue, state = 0, actions = "bKills"): Promise<void> {
+    async retrieveBestPolicies(token: string, team: Team = Team.Blue, state = 0, actions = "bKills"): Promise<void> {
         const bluePolicySchemas: PolicySchema[] = [
             {state: state, action: actions, probability: 1, qValue: 0, goldAdv: "Even"},
             {state: state + 1, action: "rKills", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
@@ -108,7 +120,7 @@ export class DummyPoliciesModel implements IPoliciesModel {
         this.policies.policies = team === Team.Blue ? bluePolicySchemas : redPolicySchemas;
     }
 
-    async retrieveNextPolicies(team: Team = Team.Blue, state = 0, action = "bKills"): Promise<void> {
+    async retrieveNextPolicies(token: string, team: Team = Team.Blue, state = 0, action = "bKills"): Promise<void> {
         const bluePolicySchemas: PolicySchema[] = [
             {state: state + 1, action: "bKills", probability: 1, qValue: 0, goldAdv: "Even"},
             {state: state + 1, action: "rKills", probability: Math.random(), qValue: Math.random() * 100, goldAdv: "Even"},
@@ -132,7 +144,7 @@ export class DummyPoliciesModel implements IPoliciesModel {
         this.policies.policies = team === Team.Blue ? bluePolicySchemas : redPolicySchemas;
     }
 
-    async retrieveStartPolicies(team: Team = Team.Blue): Promise<void> {
+    async retrieveStartPolicies(token: string, team: Team = Team.Blue): Promise<void> {
         const policySchemas: PolicySchema[] = [
             {state: 0, action: "rKills", probability: Math.random(), qValue: 0, goldAdv: "Even"},
             {state: 0, action: "bKills", probability: Math.random(), qValue: 0, goldAdv: "Even"},
