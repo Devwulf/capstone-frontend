@@ -3,6 +3,7 @@ import { addListener } from "process";
 import React from "react";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
+import Configuration from "./utils/Configuration";
 import { AuthContext, BaseUrlContext } from "./utils/Context";
 
 type AppProps = {
@@ -26,7 +27,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
         this.state = {
             token: "",
-            baseUrl: ""
+            baseUrl: Configuration.serverBaseUrl
         };
 
         this.setToken = this.setToken.bind(this);

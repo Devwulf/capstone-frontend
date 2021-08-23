@@ -68,6 +68,7 @@ class PoliciesInner extends React.Component<PoliciesProps, PoliciesState> {
         await this.state.currentPolicies.clearPolicies();
         await this.state.bestPolicies.clearPolicies();
         await this.state.nextPolicies.retrieveStartPolicies(this.props.authContext.token);
+        await this.props.accuracyContext.setAccuracy(0);
         await setStateAsync({isLoading: false}, this);
     }
 
