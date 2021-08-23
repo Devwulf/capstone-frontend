@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import Scrollbars from "react-custom-scrollbars-2";
 import { DummyPoliciesModel, IPoliciesModel, PoliciesModel, PoliciesSchema, Team } from "../models/Policies";
 import { PolicyModel, PolicySchema } from "../models/Policy";
-import { AccuracyContext, AccuracyContextType, AuthContext, AuthContextType, PolicyContext, TeamContext, TeamContextType } from "../utils/Context";
+import { AccuracyContext, AccuracyContextType, AuthContext, AuthContextType, BaseUrlContext, BaseUrlContextType, PolicyContext, TeamContext, TeamContextType } from "../utils/Context";
 import { Action } from "../utils/Enums";
 import { setStateAsync } from "../utils/Helpers";
 import Policy from "./Policy";
@@ -13,6 +13,7 @@ type PoliciesProps = {
     teamContext: TeamContextType;
     accuracyContext: AccuracyContextType;
     authContext: AuthContextType;
+    baseUrlContext: BaseUrlContextType;
 }
 
 type PoliciesState = {
@@ -28,10 +29,11 @@ class PoliciesInner extends React.Component<PoliciesProps, PoliciesState> {
     constructor(props: PoliciesProps) {
         super(props);
 
+        const baseUrl = props.baseUrlContext.baseUrl;
         this.state = {
-            currentPolicies: new PoliciesModel(),
-            bestPolicies: new PoliciesModel(),
-            nextPolicies: new PoliciesModel(),
+            currentPolicies: new PoliciesModel(baseUrl),
+            bestPolicies: new PoliciesModel(baseUrl),
+            nextPolicies: new PoliciesModel(baseUrl),
             pastPolicies: [],
             isLoading: true,
             correctCount: 0
@@ -129,7 +131,7 @@ class PoliciesInner extends React.Component<PoliciesProps, PoliciesState> {
                                                 <PolicyState state={policy.state} selectedAction={policy} actions={pastPolicies[index].policies} isDisabled />
                                             ) ||
                                             (policy.state !== nextState && index >= pastPolicies.length &&
-                                                <PolicyState state={policy.state} selectedAction={policy} />
+                                                <PolicyState state={policy.state} selectedAction={policy} isDisabled />
                                             )}
                                         </div>
                                     ))}
@@ -147,8 +149,9 @@ export default function Policies(): JSX.Element {
     const team = useContext(TeamContext);
     const accuracy = useContext(AccuracyContext);
     const auth = useContext(AuthContext);
+    const baseUrl = useContext(BaseUrlContext);
 
     return (
-        <PoliciesInner teamContext={team} accuracyContext={accuracy} authContext={auth} />
+        <PoliciesInner teamContext={team} accuracyContext={accuracy} authContext={auth} baseUrlContext={baseUrl} />
     );
 }

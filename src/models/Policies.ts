@@ -16,17 +16,18 @@ export interface IPoliciesModel {
 }
 
 export class PoliciesModel implements IPoliciesModel {
-    private readonly baseUrl: string = "http://localhost:5000/api/policy";
+    private baseUrl: string;
     private policies: PoliciesSchema;
 
-    constructor(policies: PoliciesSchema = { policies: [] }) {
+    constructor(baseUrl: string, policies: PoliciesSchema = { policies: [] }) {
+        this.baseUrl = baseUrl;
         this.policies = policies;
     }
 
     async retrieveBestPolicies(token: string, team: Team = Team.Blue, state = 0, actions = "bKills"): Promise<void> {
         // Get policies from backend
         const policies: PolicySchema[] = [];
-        const url = `${this.baseUrl}/best?team=${Team[team]}&state=${state}&actions=${actions}`;
+        const url = `${this.baseUrl}/api/policy/best?team=${Team[team]}&state=${state}&actions=${actions}`;
         const res = await axios.get<PoliciesSchema>(url, {
             headers: {
                 "X-Access-Tokens": token
@@ -42,7 +43,7 @@ export class PoliciesModel implements IPoliciesModel {
     async retrieveNextPolicies(token: string, team: Team = Team.Blue, state = 0, action = "bKills"): Promise<void> {
         // Get policies from backend
         const policies: PolicySchema[] = [];
-        const url = `${this.baseUrl}/next?team=${Team[team]}&state=${state}&action=${action}`;
+        const url = `${this.baseUrl}/api/policy/next?team=${Team[team]}&state=${state}&action=${action}`;
         const res = await axios.get<PoliciesSchema>(url, {
             headers: {
                 "X-Access-Tokens": token
@@ -58,7 +59,7 @@ export class PoliciesModel implements IPoliciesModel {
     async retrieveStartPolicies(token: string, team: Team = Team.Blue): Promise<void> {
         // Get policies from backend
         const policies: PolicySchema[] = [];
-        const url = `${this.baseUrl}/start?team=${Team[team]}`;
+        const url = `${this.baseUrl}/api/policy/start?team=${Team[team]}`;
         const res = await axios.get<PoliciesSchema>(url, {
             headers: {
                 "X-Access-Tokens": token

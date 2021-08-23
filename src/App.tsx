@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
-import { AuthContext } from "./utils/Context";
+import { AuthContext, BaseUrlContext } from "./utils/Context";
 
 type AppProps = {
 
@@ -10,6 +10,7 @@ type AppProps = {
 
 type AppState = {
     token: string;
+    baseUrl: string;
 }
 
 export default class App extends React.Component<AppProps, AppState> {
@@ -17,15 +18,19 @@ export default class App extends React.Component<AppProps, AppState> {
         super(props);
 
         this.state = {
-            token: ""
+            token: "",
+            baseUrl: ""
         };
 
         this.setToken = this.setToken.bind(this);
+        this.setBaseUrl = this.setBaseUrl.bind(this);
     }
 
     async setToken(token: string): Promise<void> {
+        const { baseUrl } = this.state;
+
         try {
-            const res = await axios.get("http://localhost:5000/auth/token", {
+            const res = await axios.get(`${baseUrl}/auth/token`, {
                 headers: {
                     "X-Access-Tokens": token
                 }
@@ -41,18 +46,24 @@ export default class App extends React.Component<AppProps, AppState> {
         }
     }
 
+    async setBaseUrl(baseUrl: string): Promise<void> {
+        this.setState({baseUrl: baseUrl});
+    }
+
     render(): JSX.Element {
-        const { token } = this.state;
+        const { token, baseUrl } = this.state;
         return (
             <AuthContext.Provider value={{token: token, setToken: this.setToken}}>
-                <div className="App">
-                    {(!token && 
-                        <LoginPage />
-                    ) || 
-                    (token &&
-                        <MainPage />
-                    )}
-                </div>
+                <BaseUrlContext.Provider value={{baseUrl: baseUrl, setBaseUrl: this.setBaseUrl}}>
+                    <div className="App">
+                        {(!token && 
+                            <LoginPage />
+                        ) || 
+                        (token &&
+                            <MainPage />
+                        )}
+                    </div>
+                </BaseUrlContext.Provider>
             </AuthContext.Provider>
         );
     }

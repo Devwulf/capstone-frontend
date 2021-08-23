@@ -61,3 +61,13 @@ export const AuthContext = React.createContext<AuthContextType>({
     token: "",
     setToken: token => { return; }
 });
+
+export type BaseUrlContextType = {
+    baseUrl: string;
+    setBaseUrl: (baseUrl: string) => void;
+}
+
+export const BaseUrlContext = React.createContext<BaseUrlContextType>({
+    baseUrl: "",
+    setBaseUrl: baseUrl => { return; }
+});
