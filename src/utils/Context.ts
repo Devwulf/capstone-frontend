@@ -65,9 +65,13 @@ export const AuthContext = React.createContext<AuthContextType>({
 export type BaseUrlContextType = {
     baseUrl: string;
     setBaseUrl: (baseUrl: string) => void;
+    addListener: (name: string, listener: (baseUrl: string) => Promise<void>) => void;
+    removeListener: (name: string) => void;
 }
 
 export const BaseUrlContext = React.createContext<BaseUrlContextType>({
     baseUrl: "",
-    setBaseUrl: baseUrl => { return; }
+    setBaseUrl: baseUrl => { return; },
+    addListener: (name, listener) => { return; },
+    removeListener: (name) => { return; }
 });

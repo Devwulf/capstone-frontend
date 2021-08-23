@@ -40,17 +40,30 @@ class PoliciesInner extends React.Component<PoliciesProps, PoliciesState> {
         };
 
         this.onTeamChanged = this.onTeamChanged.bind(this);
+        this.onBaseUrlChanged = this.onBaseUrlChanged.bind(this);
+        this.resetPolicies = this.resetPolicies.bind(this);
         this.onChoosePolicy = this.onChoosePolicy.bind(this);
     }
 
     async componentDidMount(): Promise<void> {
-        this.props.teamContext.addListener("policies", this.onTeamChanged);
+        const { teamContext, baseUrlContext } = this.props;
+
+        teamContext.addListener("policies", this.onTeamChanged);
+        baseUrlContext.addListener("policies", this.onBaseUrlChanged);
 
         await this.state.nextPolicies.retrieveStartPolicies(this.props.authContext.token);
         await setStateAsync({isLoading: false}, this);
     }
 
     async onTeamChanged(team: Team): Promise<void> {
+        await this.resetPolicies();
+    }
+
+    async onBaseUrlChanged(baseUrl: string): Promise<void> {
+        await this.resetPolicies();
+    }
+
+    async resetPolicies(): Promise<void> {
         await setStateAsync({isLoading: true, pastPolicies: []}, this);
         await this.state.currentPolicies.clearPolicies();
         await this.state.bestPolicies.clearPolicies();
@@ -88,7 +101,9 @@ class PoliciesInner extends React.Component<PoliciesProps, PoliciesState> {
     }
 
     componentWillUnmount(): void {
-        this.props.teamContext.removeListener("policies");
+        const { teamContext, baseUrlContext } = this.props;
+        teamContext.removeListener("policies");
+        baseUrlContext.removeListener("policies");
     }
 
     render(): JSX.Element {
