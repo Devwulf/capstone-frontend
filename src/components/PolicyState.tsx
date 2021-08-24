@@ -1,3 +1,4 @@
+import deepEqual from "deep-equal";
 import React from "react";
 import Scrollbars from "react-custom-scrollbars-2";
 import { Team } from "../models/Policies";
@@ -31,6 +32,8 @@ export default class PolicyState extends React.Component<PolicyStateProps, Polic
     render(): JSX.Element {
         const { state, selectedAction, actions = [], isDisabled = false } = this.props;
         const allSchemas: PolicySchema[] = actions;
+        let bestProb: PolicySchema | undefined;
+        let bestQ: PolicySchema | undefined;
         if (actions.length <= 0) {
             for (const value in Action) {
                 if (!isNaN(Number(value)))
@@ -42,6 +45,9 @@ export default class PolicyState extends React.Component<PolicyStateProps, Polic
                         { state: state, action: value, probability: -1, qValue: -1, goldAdv: "" };
                 allSchemas.push(schema);
             }
+        } else {
+            bestProb = actions.reduce((prev, current) => (prev.probability > current.probability) ? prev : current);
+            bestQ = actions.reduce((prev, current) => (prev.qValue > current.qValue) ? prev : current);
         }
 
         return (
@@ -57,8 +63,10 @@ export default class PolicyState extends React.Component<PolicyStateProps, Polic
                                 {allSchemas.map((value, index) => (
                                     <div key={index} className={`${index === allSchemas.length - 1 ? "" : "mb-2"}`}>
                                         <Policy policy={value} 
-                                            isSelected={selectedAction !== undefined && value.action === selectedAction.action} 
+                                            isSelected={selectedAction !== undefined && (value.action === selectedAction.action || (bestProb !== undefined && deepEqual(bestProb, value)))} 
                                             isDisabled={isDisabled}
+                                            isBestProb={bestProb !== undefined && deepEqual(bestProb, value)}
+                                            isBestQValue={bestQ !== undefined && deepEqual(bestQ, value)}
                                             showAction 
                                             showProbability 
                                             showQValue 

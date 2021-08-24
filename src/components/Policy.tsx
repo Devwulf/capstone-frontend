@@ -7,6 +7,8 @@ type PolicyProps = {
     policy: PolicySchema;
     isSelected?: boolean;
     isDisabled?: boolean;
+    isBestProb?: boolean;
+    isBestQValue?: boolean;
     showState?: boolean;
     showAction?: boolean;
     showProbability?: boolean;
@@ -28,7 +30,7 @@ export default class Policy extends React.Component<PolicyProps, PolicyState> {
     }
 
     render(): JSX.Element {
-        const { policy, isSelected = false, isDisabled = false, showState = false, showAction = false, showProbability = false, showQValue = false, showGoldAdv = false } = this.props;
+        const { policy, isSelected = false, isDisabled = false, isBestProb = false, isBestQValue = false, showState = false, showAction = false, showProbability = false, showQValue = false, showGoldAdv = false } = this.props;
         const probability = policy.probability < 0 ? "-" : `${(policy.probability * 100).toFixed(2)}%`;
         const qValue = policy.qValue < 0 ? "-" : `${policy.qValue.toFixed(2)}`;
         const goldAdv = policy.goldAdv === "" ? "-" : policy.goldAdv;
@@ -43,11 +45,11 @@ export default class Policy extends React.Component<PolicyProps, PolicyState> {
                                 <span className={`${showState ? "" : "hidden"}`}>{policy.state}</span>
                                 <span className={`${showAction ? "text-sm" : "hidden"}`}>{policy.action}</span>
                                 <div className="flex flex-row">
-                                    <div className={`${showProbability ? "flex flex-col mr-4" : "hidden"}`}>
+                                    <div className={`${showProbability ? "flex flex-col mr-4" : "hidden"} ${isBestProb ? "text-green-300 font-bold" : ""}`}>
                                         <span className="text-xs">Probability</span>
                                         <span className="text-sm">{probability}</span>
                                     </div>
-                                    <div className={`${showQValue ? "flex flex-col mr-4" : "hidden"}`}>
+                                    <div className={`${showQValue ? "flex flex-col mr-4" : "hidden"} ${isBestQValue ? "text-green-300 font-bold" : ""}`}>
                                         <span className="text-xs">Q-Value</span>
                                         <span className="text-sm">{qValue}</span>
                                     </div>
