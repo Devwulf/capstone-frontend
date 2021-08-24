@@ -27,7 +27,7 @@ export default class Searchbar extends React.Component<SearchbarProps, Searchbar
                 {({ team }) => (
                     <SearchContext.Consumer>
                         {({ searchStr, setSearchStr, searchAction }) => (
-                            <div className="flex w-full px-4 py-2 max-w-3xl">
+                            <div className="flex w-full px-4 py-2 max-w-3xl h-12">
                                 <input 
                                     className="w-full mr-2 rounded-default shadow-inner px-2 text-sm" 
                                     placeholder="Type in Youtube link here..."

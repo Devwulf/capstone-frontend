@@ -47,9 +47,14 @@ export default class TopBar extends React.Component<TopBarProps, TopBarState> {
                     <ToggleBaseUrl />
                 </div>
                 <Searchbar />
+
                 <div className="flex flex-col items-end justify-center w-40">
-                    <span className="text-sm">Model Accuracy:</span>
-                    <span className="text-sm font-bold">{(accuracy * 100).toFixed(2)}%</span>
+                    {/*
+                        <>
+                            <span className="text-sm">Model Accuracy:</span>
+                            <span className="text-sm font-bold">{(accuracy * 100).toFixed(2)}%</span>
+                        </>
+                    /**/}
                 </div>
             </div>
         );
