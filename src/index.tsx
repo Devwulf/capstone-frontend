@@ -5,10 +5,13 @@ import "./assets/main.css";
 import "./assets/toggle.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+import { CookiesProvider } from "react-cookie/es6";
 
 ReactDOM.render(
     <React.StrictMode>
-        <App />
+        <CookiesProvider>
+            <App />
+        </CookiesProvider>
     </React.StrictMode>,
     document.getElementById("root")
 );

@@ -1,13 +1,15 @@
 import axios from "axios";
 import { addListener } from "process";
 import React from "react";
+import { Cookies, withCookies } from "react-cookie/es6";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import Configuration from "./utils/Configuration";
 import { AuthContext, BaseUrlContext } from "./utils/Context";
 
-type AppProps = {
 
+type AppProps = {
+    cookies: Cookies;
 }
 
 type AppState = {
@@ -20,7 +22,7 @@ type BaseUrlListener = {
     listener: (baseUrl: string) => Promise<void>;
 }
 
-export default class App extends React.Component<AppProps, AppState> {
+export class App extends React.Component<AppProps, AppState> {
     private baseUrlListeners: BaseUrlListener[] = [];
     constructor(props: AppProps) {
         super(props);
@@ -31,6 +33,8 @@ export default class App extends React.Component<AppProps, AppState> {
         };
 
         this.setToken = this.setToken.bind(this);
+        this.loadTokenFromCookie = this.loadTokenFromCookie.bind(this);
+        this.checkTokenValid = this.checkTokenValid.bind(this);
 
         this.setBaseUrl = this.setBaseUrl.bind(this);
         this.addBaseUrlListener = this.addBaseUrlListener.bind(this);
@@ -38,6 +42,27 @@ export default class App extends React.Component<AppProps, AppState> {
     }
 
     async setToken(token: string): Promise<void> {
+        const { cookies } = this.props;
+        const isTokenValid = await this.checkTokenValid(token);
+        if (isTokenValid)
+            this.setState({token: token}, () => {
+                cookies.set("token", token);
+            });
+        else
+            this.setState({token: ""});
+    }
+
+    async loadTokenFromCookie(): Promise<void> {
+        const { cookies } = this.props;
+        const token: string = cookies.get("token");
+        if (!token)
+            return;
+
+        const isTokenValid = await this.checkTokenValid(token);
+        this.setState({token: isTokenValid ? token : ""});
+    }
+
+    async checkTokenValid(token: string): Promise<boolean> {
         const { baseUrl } = this.state;
 
         try {
@@ -46,14 +71,14 @@ export default class App extends React.Component<AppProps, AppState> {
                     "X-Access-Tokens": token
                 }
             });
-            if (res.status === 200) {
-                if (res.data["message"] === "valid token")
-                    this.setState({token: token});
-                else
-                    this.setState({token: ""});
-            }
+
+            if (res.status === 200)
+                return res.data["message"] === "valid token";
+
+            return false;
         } catch (err) {
             alert(`${err.response.status}: ${err.response.data}`);
+            return false;
         }
     }
 
@@ -95,3 +120,5 @@ export default class App extends React.Component<AppProps, AppState> {
         );
     }
 }
+
+export default withCookies(App);
