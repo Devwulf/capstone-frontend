@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useContext } from "react";
 import ToggleBaseUrl from "../components/ToggleBaseUrl";
+import Tooltip from "../components/Tooltip";
 import { AuthContext, AuthContextType, BaseUrlContext, BaseUrlContextType } from "../utils/Context";
 
 type LoginPageProps = {
@@ -100,10 +101,13 @@ export class LoginPageInner extends React.Component<LoginPageProps, LoginPageSta
                                 onClick={() => this.setState({isRegister: true})}>Register</button>
                             <button className="px-4 py-1 mr-2 rounded-default text-xs bg-indigo-700 text-indigo-200"
                                 onClick={this.onLogin}>Login</button>
-                            <button className="px-4 py-1 rounded-default text-xs bg-indigo-400 text-indigo-100"
-                                onClick={this.onDemoClick}>
+                            <div className="relative flex items-center">
+                                <button className="px-4 py-1 rounded-default text-xs bg-indigo-400 text-indigo-100"
+                                    onClick={this.onDemoClick}>
                                     Demo
-                            </button>
+                                </button>
+                                <Tooltip />
+                            </div>
                         </div>
                     </div>
                 ) || 

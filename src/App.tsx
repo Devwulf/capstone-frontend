@@ -5,7 +5,7 @@ import { Cookies, withCookies } from "react-cookie/es6";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import Configuration from "./utils/Configuration";
-import { AuthContext, BaseUrlContext } from "./utils/Context";
+import { AuthContext, BaseUrlContext, CookiesContext } from "./utils/Context";
 
 
 type AppProps = {
@@ -103,18 +103,21 @@ export class App extends React.Component<AppProps, AppState> {
     }
 
     render(): JSX.Element {
+        const { cookies } = this.props;
         const { token, baseUrl } = this.state;
         return (
             <AuthContext.Provider value={{token: token, setToken: this.setToken}}>
                 <BaseUrlContext.Provider value={{baseUrl: baseUrl, setBaseUrl: this.setBaseUrl, addListener: this.addBaseUrlListener, removeListener: this.removeBaseUrlListener}}>
-                    <div className="App">
-                        {(!token && 
-                            <LoginPage />
-                        ) || 
-                        (token &&
-                            <MainPage />
-                        )}
-                    </div>
+                    <CookiesContext.Provider value={{cookies: cookies}}>
+                        <div className="App">
+                            {(!token && 
+                                <LoginPage />
+                            ) || 
+                            (token &&
+                                <MainPage />
+                            )}
+                        </div>
+                    </CookiesContext.Provider>
                 </BaseUrlContext.Provider>
             </AuthContext.Provider>
         );

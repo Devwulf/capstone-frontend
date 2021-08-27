@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
+import "./assets/app.css";
 import "./assets/main.css";
 import "./assets/toggle.css";
 import App from "./App";

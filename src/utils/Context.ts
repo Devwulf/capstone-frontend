@@ -1,4 +1,5 @@
 import React from "react";
+import { Cookies } from "react-cookie/es6";
 import { Team } from "../models/Policies";
 import { PolicySchema } from "../models/Policy";
 
@@ -74,4 +75,12 @@ export const BaseUrlContext = React.createContext<BaseUrlContextType>({
     setBaseUrl: baseUrl => { return; },
     addListener: (name, listener) => { return; },
     removeListener: (name) => { return; }
+});
+
+export type CookiesContextType = {
+    cookies: Cookies;
+}
+
+export const CookiesContext = React.createContext<CookiesContextType>({
+    cookies: new Cookies()
 });
