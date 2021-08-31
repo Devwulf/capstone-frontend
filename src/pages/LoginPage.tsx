@@ -80,7 +80,15 @@ export class LoginPageInner extends React.Component<LoginPageProps, LoginPageSta
                     <div className="flex flex-col p-4 rounded-lg bg-indigo-200 text-indigo-900">
                         <div className="flex flex-row justify-between items-center mb-4">
                             <span className="text-2xl font-bold">Login</span>
-                            <ToggleBaseUrl />
+                            <div className="">
+                                <ToggleBaseUrl />
+                                <Tooltip order={0}
+                                    text="This is for choosing whether to use your own local backend server or a premade server for login." 
+                                    position="top"
+                                    positionOffset={1.5}
+                                    hasNext
+                                    hasClose />
+                            </div>
                         </div>
                         <div className="flex flex-col mb-2">
                             <label className="text-xs mb-1" htmlFor="">Username</label>
@@ -101,12 +109,17 @@ export class LoginPageInner extends React.Component<LoginPageProps, LoginPageSta
                                 onClick={() => this.setState({isRegister: true})}>Register</button>
                             <button className="px-4 py-1 mr-2 rounded-default text-xs bg-indigo-700 text-indigo-200"
                                 onClick={this.onLogin}>Login</button>
-                            <div className="relative flex items-center">
+                            <div className="">
                                 <button className="px-4 py-1 rounded-default text-xs bg-indigo-400 text-indigo-100"
                                     onClick={this.onDemoClick}>
                                     Demo
                                 </button>
-                                <Tooltip />
+                                <Tooltip order={1}
+                                    text="This button fills in the login details for demo. Try it out!"
+                                    position="right"
+                                    hasClose
+                                    hasPrev
+                                    hasNext />
                             </div>
                         </div>
                     </div>

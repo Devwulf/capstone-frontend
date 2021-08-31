@@ -84,3 +84,17 @@ export type CookiesContextType = {
 export const CookiesContext = React.createContext<CookiesContextType>({
     cookies: new Cookies()
 });
+
+export type TooltipContextType = {
+    currentTooltip: number;
+    isTooltipEnabled: boolean;
+    setCurrentTooltip: (index: number) => void;
+    setTooltipEnabled: (isEnabled: boolean) => void;
+}
+
+export const TooltipContext = React.createContext<TooltipContextType>({
+    currentTooltip: 0,
+    isTooltipEnabled: true,
+    setCurrentTooltip: index => { return; },
+    setTooltipEnabled: isEnabled => { return; }
+});

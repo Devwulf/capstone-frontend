@@ -5,7 +5,7 @@ import { Cookies, withCookies } from "react-cookie/es6";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import Configuration from "./utils/Configuration";
-import { AuthContext, BaseUrlContext, CookiesContext } from "./utils/Context";
+import { AuthContext, BaseUrlContext, CookiesContext, TooltipContext } from "./utils/Context";
 
 
 type AppProps = {
@@ -15,6 +15,8 @@ type AppProps = {
 type AppState = {
     token: string;
     baseUrl: string;
+    currentTooltip: number;
+    isTooltipEnabled: boolean;
 }
 
 type BaseUrlListener = {
@@ -29,7 +31,9 @@ export class App extends React.Component<AppProps, AppState> {
 
         this.state = {
             token: "",
-            baseUrl: Configuration.serverBaseUrl
+            baseUrl: Configuration.serverBaseUrl,
+            currentTooltip: 0,
+            isTooltipEnabled: true
         };
 
         this.setToken = this.setToken.bind(this);
@@ -39,6 +43,21 @@ export class App extends React.Component<AppProps, AppState> {
         this.setBaseUrl = this.setBaseUrl.bind(this);
         this.addBaseUrlListener = this.addBaseUrlListener.bind(this);
         this.removeBaseUrlListener = this.removeBaseUrlListener.bind(this);
+
+        this.setCurrentTooltip = this.setCurrentTooltip.bind(this);
+        this.setTooltipEnabled = this.setTooltipEnabled.bind(this);
+    }
+
+    async componentDidMount(): Promise<void> {
+        await this.loadTokenFromCookie();
+
+        const { cookies } = this.props;
+        const enabled: string | undefined = cookies.get("isTooltipEnabled");
+        
+        if (enabled == undefined)
+            cookies.set("isTooltipEnabled", true);
+        else
+            this.setState({isTooltipEnabled: enabled === "true"});
     }
 
     async setToken(token: string): Promise<void> {
@@ -102,21 +121,35 @@ export class App extends React.Component<AppProps, AppState> {
         this.baseUrlListeners = this.baseUrlListeners.filter(listener => listener.name !== name);
     }
 
+    setCurrentTooltip(index: number): void {
+        this.setState({currentTooltip: index});
+    }
+
+    setTooltipEnabled(isEnabled: boolean): void {
+        const { cookies } = this.props;
+        this.setState({isTooltipEnabled: isEnabled}, () => {
+            cookies.set("isTooltipEnabled", isEnabled);
+        });
+    }
+
     render(): JSX.Element {
         const { cookies } = this.props;
-        const { token, baseUrl } = this.state;
+        const { token, baseUrl, currentTooltip, isTooltipEnabled } = this.state;
+        
         return (
             <AuthContext.Provider value={{token: token, setToken: this.setToken}}>
                 <BaseUrlContext.Provider value={{baseUrl: baseUrl, setBaseUrl: this.setBaseUrl, addListener: this.addBaseUrlListener, removeListener: this.removeBaseUrlListener}}>
                     <CookiesContext.Provider value={{cookies: cookies}}>
-                        <div className="App">
-                            {(!token && 
-                                <LoginPage />
-                            ) || 
-                            (token &&
-                                <MainPage />
-                            )}
-                        </div>
+                        <TooltipContext.Provider value={{currentTooltip: currentTooltip, isTooltipEnabled: isTooltipEnabled, setCurrentTooltip: this.setCurrentTooltip, setTooltipEnabled: this.setTooltipEnabled}}>
+                            <div className="App">
+                                {(!token &&
+                                    <LoginPage />
+                                ) ||
+                                (token &&
+                                    <MainPage />
+                                )}
+                            </div>
+                        </TooltipContext.Provider>
                     </CookiesContext.Provider>
                 </BaseUrlContext.Provider>
             </AuthContext.Provider>
