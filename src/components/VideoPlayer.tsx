@@ -12,8 +12,7 @@ type VideoPlayerState = {
 
 export default class VideoPlayer extends React.Component<VideoPlayerProps, VideoPlayerState> {
     static contextType = SearchContext;
-    private readonly WIDTH = 560;
-    private readonly HEIGHT = 315;
+    private readonly WIDTH = 840;
     constructor(props: VideoPlayerProps) {
         super(props);
 
@@ -54,13 +53,13 @@ export default class VideoPlayer extends React.Component<VideoPlayerProps, Video
 
     render(): JSX.Element {
         const { embedId, isIdValid } = this.state;
-
+        const height = this.WIDTH * (9 / 16);
         return (
             <div className="flex w-full justify-center relative">
                 <div className="absolute left-0 right-0 top-0 bottom-0 bg-gray-900 opacity-50"></div>
                 {(!embedId && 
                     <div className="flex w-full justify-center z-10">
-                        <div className="flex items-center justify-center bg-gray-900" style={{width: this.WIDTH, height: this.HEIGHT}}>
+                        <div className="flex items-center justify-center bg-gray-900" style={{width: this.WIDTH, height: height}}>
                             <span className="text-gray-400">{`${isIdValid ? "No video selected." : "Invalid video url or id given."}`}</span>
                         </div>
                     </div>
@@ -68,7 +67,7 @@ export default class VideoPlayer extends React.Component<VideoPlayerProps, Video
                 (embedId &&
                     <div className="z-10">
                         <iframe width={this.WIDTH}
-                            height={this.HEIGHT}
+                            height={height}
                             src={`https://www.youtube.com/embed/${embedId}`}
                             frameBorder="0"
                             allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

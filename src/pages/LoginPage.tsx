@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useContext } from "react";
 import ToggleBaseUrl from "../components/ToggleBaseUrl";
 import Tooltip from "../components/Tooltip";
-import { AuthContext, AuthContextType, BaseUrlContext, BaseUrlContextType } from "../utils/Context";
+import { AuthContext, AuthContextType, BaseUrlContext, BaseUrlContextType, TooltipContext, TooltipContextType } from "../utils/Context";
 
 type LoginPageProps = {
     authContext: AuthContextType;
@@ -85,7 +85,7 @@ export class LoginPageInner extends React.Component<LoginPageProps, LoginPageSta
                                 <Tooltip order={0}
                                     text="This is for choosing whether to use your own local backend server or a premade server for login." 
                                     position="top"
-                                    positionOffset={1.5}
+                                    positionOffsetY={1.5}
                                     hasNext
                                     hasClose />
                             </div>
@@ -117,6 +117,8 @@ export class LoginPageInner extends React.Component<LoginPageProps, LoginPageSta
                                 <Tooltip order={1}
                                     text="This button fills in the login details for demo. Try it out!"
                                     position="right"
+                                    positionOffsetY={-1.5}
+                                    targetSizeY={26}
                                     hasClose
                                     hasPrev
                                     hasNext />

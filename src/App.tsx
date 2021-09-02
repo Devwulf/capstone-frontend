@@ -1,5 +1,4 @@
 import axios from "axios";
-import { addListener } from "process";
 import React from "react";
 import { Cookies, withCookies } from "react-cookie/es6";
 import LoginPage from "./pages/LoginPage";
@@ -45,6 +44,7 @@ export class App extends React.Component<AppProps, AppState> {
         this.removeBaseUrlListener = this.removeBaseUrlListener.bind(this);
 
         this.setCurrentTooltip = this.setCurrentTooltip.bind(this);
+        this.resetCurrentTooltip = this.resetCurrentTooltip.bind(this);
         this.setTooltipEnabled = this.setTooltipEnabled.bind(this);
     }
 
@@ -66,9 +66,12 @@ export class App extends React.Component<AppProps, AppState> {
         if (isTokenValid)
             this.setState({token: token}, () => {
                 cookies.set("token", token);
+                this.resetCurrentTooltip();
             });
         else
-            this.setState({token: ""});
+            this.setState({token: ""}, () => {
+                this.resetCurrentTooltip();
+            });
     }
 
     async loadTokenFromCookie(): Promise<void> {
@@ -78,7 +81,9 @@ export class App extends React.Component<AppProps, AppState> {
             return;
 
         const isTokenValid = await this.checkTokenValid(token);
-        this.setState({token: isTokenValid ? token : ""});
+        this.setState({token: isTokenValid ? token : ""}, () => {
+            this.resetCurrentTooltip();
+        });
     }
 
     async checkTokenValid(token: string): Promise<boolean> {
@@ -125,6 +130,10 @@ export class App extends React.Component<AppProps, AppState> {
         this.setState({currentTooltip: index});
     }
 
+    resetCurrentTooltip(): void {
+        this.setCurrentTooltip(0);
+    }
+
     setTooltipEnabled(isEnabled: boolean): void {
         const { cookies } = this.props;
         this.setState({isTooltipEnabled: isEnabled}, () => {
@@ -140,7 +149,7 @@ export class App extends React.Component<AppProps, AppState> {
             <AuthContext.Provider value={{token: token, setToken: this.setToken}}>
                 <BaseUrlContext.Provider value={{baseUrl: baseUrl, setBaseUrl: this.setBaseUrl, addListener: this.addBaseUrlListener, removeListener: this.removeBaseUrlListener}}>
                     <CookiesContext.Provider value={{cookies: cookies}}>
-                        <TooltipContext.Provider value={{currentTooltip: currentTooltip, isTooltipEnabled: isTooltipEnabled, setCurrentTooltip: this.setCurrentTooltip, setTooltipEnabled: this.setTooltipEnabled}}>
+                        <TooltipContext.Provider value={{currentTooltip: currentTooltip, isTooltipEnabled: isTooltipEnabled, setCurrentTooltip: this.setCurrentTooltip, resetCurrentTooltip: this.resetCurrentTooltip, setTooltipEnabled: this.setTooltipEnabled}}>
                             <div className="App">
                                 {(!token &&
                                     <LoginPage />
