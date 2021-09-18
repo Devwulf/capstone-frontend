@@ -50,8 +50,7 @@ export default class TopBar extends React.Component<TopBarProps, TopBarState> {
                             positionOffsetX={1}
                             positionOffsetY={3}
                             hasPrev
-                            hasNext
-                            hasClose />
+                            hasNext />
                     </div>
                     <div className="flex flex-col justify-center mr-4">
                         <ToggleBaseUrl />
@@ -60,8 +59,7 @@ export default class TopBar extends React.Component<TopBarProps, TopBarState> {
                             position="bottom"
                             positionOffsetY={3}
                             hasPrev
-                            hasNext
-                            hasClose />
+                            hasNext />
                     </div>
                 </div>
                 <div className="w-full flex flex-col max-w-3xl items-center">

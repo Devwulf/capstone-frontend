@@ -1,6 +1,7 @@
 import axios from "axios";
 import React from "react";
 import { Cookies, withCookies } from "react-cookie/es6";
+import { Redirect, Route, Switch } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import Configuration from "./utils/Configuration";
@@ -144,20 +145,24 @@ export class App extends React.Component<AppProps, AppState> {
     render(): JSX.Element {
         const { cookies } = this.props;
         const { token, baseUrl, currentTooltip, isTooltipEnabled } = this.state;
+        console.log(token);
         
         return (
             <AuthContext.Provider value={{token: token, setToken: this.setToken}}>
                 <BaseUrlContext.Provider value={{baseUrl: baseUrl, setBaseUrl: this.setBaseUrl, addListener: this.addBaseUrlListener, removeListener: this.removeBaseUrlListener}}>
                     <CookiesContext.Provider value={{cookies: cookies}}>
                         <TooltipContext.Provider value={{currentTooltip: currentTooltip, isTooltipEnabled: isTooltipEnabled, setCurrentTooltip: this.setCurrentTooltip, resetCurrentTooltip: this.resetCurrentTooltip, setTooltipEnabled: this.setTooltipEnabled}}>
-                            <div className="App">
-                                {(!token &&
-                                    <LoginPage />
-                                ) ||
-                                (token &&
+                            <Switch>
+                                <Route exact path="/">
+                                    {token ? <Redirect to="/main" /> : <Redirect to="/login" />}
+                                </Route>
+                                <Route path="/login">
+                                    {token ? <Redirect to="/main" /> : <LoginPage />}
+                                </Route>
+                                <Route path="/main">
                                     <MainPage />
-                                )}
-                            </div>
+                                </Route>
+                            </Switch>
                         </TooltipContext.Provider>
                     </CookiesContext.Provider>
                 </BaseUrlContext.Provider>

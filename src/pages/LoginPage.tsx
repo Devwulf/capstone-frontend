@@ -86,8 +86,7 @@ export class LoginPageInner extends React.Component<LoginPageProps, LoginPageSta
                                     text="This is for choosing whether to use your own local backend server or a premade server for login." 
                                     position="top"
                                     positionOffsetY={1.5}
-                                    hasNext
-                                    hasClose />
+                                    hasNext />
                             </div>
                         </div>
                         <div className="flex flex-col mb-2">
@@ -105,8 +104,10 @@ export class LoginPageInner extends React.Component<LoginPageProps, LoginPageSta
                         </div>
 
                         <div className="flex justify-between">
+                            {/*
                             <button className="px-4 py-1 mr-2 rounded-default text-xs bg-indigo-400 text-indigo-100"
                                 onClick={() => this.setState({isRegister: true})}>Register</button>
+                            */}
                             <button className="px-4 py-1 mr-2 rounded-default text-xs bg-indigo-700 text-indigo-200"
                                 onClick={this.onLogin}>Login</button>
                             <div className="">
@@ -119,47 +120,47 @@ export class LoginPageInner extends React.Component<LoginPageProps, LoginPageSta
                                     position="right"
                                     positionOffsetY={-1.5}
                                     targetSizeY={26}
-                                    hasClose
                                     hasPrev
                                     hasNext />
                             </div>
                         </div>
                     </div>
-                ) || 
-                (isRegister && 
-                    <div className="flex flex-col p-4 rounded-lg bg-indigo-200 text-indigo-900">
-                        <div className="flex flex-row justify-between items-center mb-4">
-                            <span className="text-2xl font-bold">Register</span>
-                            <ToggleBaseUrl />
-                        </div>
-                        <div className="flex flex-col mb-2">
-                            <label className="text-xs mb-1" htmlFor="">Username</label>
-                            <input className="px-2 py-1 rounded-default text-sm" 
-                                value={username}
-                                onChange={event => this.setState({username: event.target.value})} />
-                        </div>
-                        <div className="flex flex-col mb-4">
-                            <label className="text-xs mb-1" htmlFor="">Password</label>
-                            <input className="px-2 py-1 rounded-default text-sm" 
-                                value={password} 
-                                type="password"
-                                onChange={event => this.setState({password: event.target.value})} />
-                        </div>
-
-                        <div className="flex justify-between">
-                            <button className="px-4 py-1 mr-2 rounded-default text-xs bg-indigo-700 text-indigo-200"
-                                onClick={this.onRegister}>Register</button>
-                            <button className="px-4 py-1 mr-2 rounded-default text-xs bg-indigo-400 text-indigo-100"
-                                onClick={() => this.setState({isRegister: false})}>
-                                    Login
-                            </button>
-                            <button className="px-4 py-1 rounded-default text-xs bg-indigo-400 text-indigo-100"
-                                onClick={this.onDemoClick}>
-                                    Demo
-                            </button>
-                        </div>
-                    </div>
                 )}
+                {/* || 
+                    (isRegister && 
+                        <div className="flex flex-col p-4 rounded-lg bg-indigo-200 text-indigo-900">
+                            <div className="flex flex-row justify-between items-center mb-4">
+                                <span className="text-2xl font-bold">Register</span>
+                                <ToggleBaseUrl />
+                            </div>
+                            <div className="flex flex-col mb-2">
+                                <label className="text-xs mb-1" htmlFor="">Username</label>
+                                <input className="px-2 py-1 rounded-default text-sm" 
+                                    value={username}
+                                    onChange={event => this.setState({username: event.target.value})} />
+                            </div>
+                            <div className="flex flex-col mb-4">
+                                <label className="text-xs mb-1" htmlFor="">Password</label>
+                                <input className="px-2 py-1 rounded-default text-sm" 
+                                    value={password} 
+                                    type="password"
+                                    onChange={event => this.setState({password: event.target.value})} />
+                            </div>
+    
+                            <div className="flex justify-between">
+                                <button className="px-4 py-1 mr-2 rounded-default text-xs bg-indigo-700 text-indigo-200"
+                                    onClick={this.onRegister}>Register</button>
+                                <button className="px-4 py-1 mr-2 rounded-default text-xs bg-indigo-400 text-indigo-100"
+                                    onClick={() => this.setState({isRegister: false})}>
+                                        Login
+                                </button>
+                                <button className="px-4 py-1 rounded-default text-xs bg-indigo-400 text-indigo-100"
+                                    onClick={this.onDemoClick}>
+                                        Demo
+                                </button>
+                            </div>
+                        </div>
+                )}*/}
             </div>
         );
     }

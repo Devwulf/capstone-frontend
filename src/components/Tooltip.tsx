@@ -11,7 +11,6 @@ type TooltipProps = {
     hasPrev?: boolean;
     hasNext?: boolean;
     hasClose?: boolean;
-    isClose?: boolean;
 }
 
 type TooltipState = {
@@ -28,7 +27,7 @@ export default class Tooltip extends React.Component<TooltipProps, TooltipState>
     }
 
     render(): JSX.Element {
-        const { order, text, position, positionOffsetX = 0, positionOffsetY = 0, targetSizeY = 0, hasPrev = false, hasNext = false, hasClose = false, isClose = false } = this.props;
+        const { order, text, position, positionOffsetX = 0, positionOffsetY = 0, targetSizeY = 0, hasPrev = false, hasNext = false, hasClose = false } = this.props;
         let style: React.CSSProperties;
         let arrowStyle: React.CSSProperties;
         switch(position) {
@@ -102,7 +101,7 @@ export default class Tooltip extends React.Component<TooltipProps, TooltipState>
                                             <button className="px-2 py-1 rounded-default bg-red-500" 
                                                 hidden={!hasClose}
                                                 onClick={() => setTooltipEnabled(false)}>
-                                                {isClose ? "Close" : "Skip"}
+                                                Close
                                             </button>
                                         </div>
                                     </div>

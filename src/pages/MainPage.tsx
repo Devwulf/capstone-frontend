@@ -1,11 +1,12 @@
 import React from "react";
+import { Redirect } from "react-router-dom";
 import Policies from "../components/Policies";
 import PolicyState from "../components/PolicyState";
 import ToggleTeam from "../components/ToggleTeam";
 import TopBar from "../components/TopBar";
 import VideoPlayer from "../components/VideoPlayer";
 import { Team } from "../models/Policies";
-import { AccuracyContext, SearchContext, TeamContext } from "../utils/Context";
+import { AccuracyContext, AuthContext, CookiesContext, SearchContext, TeamContext } from "../utils/Context";
 import { Action } from "../utils/Enums";
 
 type MainPageProps = {
@@ -123,17 +124,26 @@ export default class MainPage extends React.Component<MainPageProps, MainPageSta
     render(): JSX.Element {
         const { team, searchStr } = this.state;
         return (
-            <TeamContext.Provider value={{team: team, setTeam: this.setTeam, addListener: this.addTeamListener, removeListener: this.removeTeamListener}}>
-                <AccuracyContext.Provider value={{setAccuracy: this.setAccuracy, addListener: this.addAccuracyListener, removeListener: this.removeAccuracyListener}}>
-                    <SearchContext.Provider value={{searchStr: searchStr, setSearchStr: this.setSearchStr, searchAction: this.searchAction, addActionListener: this.addSearchActionListener, removeActionListener: this.removeSearchActionListener}}>
-                        <div className={`transition-default duration-500 ease-in-out flex flex-col w-screen h-screen ${team === Team.Blue ? "bg-blue-300" : "bg-red-300"}`}>
-                            <TopBar />
-                            <VideoPlayer />
-                            <Policies />
-                        </div>
-                    </SearchContext.Provider>
-                </AccuracyContext.Provider>
-            </TeamContext.Provider>
+            <AuthContext.Consumer>
+                {({ token }) => {
+                    if (!token)
+                        return (<Redirect to="/login" />);
+                    return (
+                        <TeamContext.Provider value={{team: team, setTeam: this.setTeam, addListener: this.addTeamListener, removeListener: this.removeTeamListener}}>
+                            <AccuracyContext.Provider value={{setAccuracy: this.setAccuracy, addListener: this.addAccuracyListener, removeListener: this.removeAccuracyListener}}>
+                                <SearchContext.Provider value={{searchStr: searchStr, setSearchStr: this.setSearchStr, searchAction: this.searchAction, addActionListener: this.addSearchActionListener, removeActionListener: this.removeSearchActionListener}}>
+                                    <div className={`transition-default duration-500 ease-in-out flex flex-col w-screen h-screen ${team === Team.Blue ? "bg-blue-300" : "bg-red-300"}`}>
+                                        
+                                        <TopBar />
+                                        <VideoPlayer />
+                                        <Policies />
+                                    </div>
+                                </SearchContext.Provider>
+                            </AccuracyContext.Provider>
+                        </TeamContext.Provider>
+                    );
+                }}
+            </AuthContext.Consumer>
         );
     }
 }

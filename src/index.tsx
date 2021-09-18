@@ -7,12 +7,15 @@ import "./assets/toggle.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { CookiesProvider } from "react-cookie/es6";
+import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(
     <React.StrictMode>
-        <CookiesProvider>
-            <App />
-        </CookiesProvider>
+        <BrowserRouter basename="/capstone-frontend">
+            <CookiesProvider>
+                <App />
+            </CookiesProvider>
+        </BrowserRouter>
     </React.StrictMode>,
     document.getElementById("root")
 );
