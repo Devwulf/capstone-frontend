@@ -1,12 +1,13 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
+import Overlay from "../components/Overlay";
 import Policies from "../components/Policies";
 import PolicyState from "../components/PolicyState";
 import ToggleTeam from "../components/ToggleTeam";
 import TopBar from "../components/TopBar";
 import VideoPlayer from "../components/VideoPlayer";
 import { Team } from "../models/Policies";
-import { AccuracyContext, AuthContext, CookiesContext, SearchContext, TeamContext } from "../utils/Context";
+import { AccuracyContext, AuthContext, CookiesContext, GraphOverlayContext, SearchContext, TeamContext } from "../utils/Context";
 import { Action } from "../utils/Enums";
 
 type MainPageProps = {
@@ -16,6 +17,7 @@ type MainPageProps = {
 type MainPageState = {
     team: Team;
     searchStr: string;
+    showGraph: boolean;
 }
 
 type TeamListener = {
@@ -42,7 +44,8 @@ export default class MainPage extends React.Component<MainPageProps, MainPageSta
 
         this.state = {
             team: Team.Blue,
-            searchStr: ""
+            searchStr: "",
+            showGraph: false
         };
 
         this.setTeam = this.setTeam.bind(this);
@@ -57,6 +60,8 @@ export default class MainPage extends React.Component<MainPageProps, MainPageSta
         this.searchAction = this.searchAction.bind(this);
         this.addSearchActionListener = this.addSearchActionListener.bind(this);
         this.removeSearchActionListener = this.removeSearchActionListener.bind(this);
+
+        this.setShowGraph = this.setShowGraph.bind(this);
     }
 
     setTeam(team: Team): void {
@@ -120,9 +125,13 @@ export default class MainPage extends React.Component<MainPageProps, MainPageSta
 
         this.searchListeners = this.searchListeners.filter(listener => listener.name !== name);
     }
+
+    setShowGraph(showGraph: boolean) {
+        this.setState({showGraph: showGraph});
+    }
     
     render(): JSX.Element {
-        const { team, searchStr } = this.state;
+        const { team, searchStr, showGraph } = this.state;
         return (
             <AuthContext.Consumer>
                 {({ token }) => {
@@ -132,12 +141,16 @@ export default class MainPage extends React.Component<MainPageProps, MainPageSta
                         <TeamContext.Provider value={{team: team, setTeam: this.setTeam, addListener: this.addTeamListener, removeListener: this.removeTeamListener}}>
                             <AccuracyContext.Provider value={{setAccuracy: this.setAccuracy, addListener: this.addAccuracyListener, removeListener: this.removeAccuracyListener}}>
                                 <SearchContext.Provider value={{searchStr: searchStr, setSearchStr: this.setSearchStr, searchAction: this.searchAction, addActionListener: this.addSearchActionListener, removeActionListener: this.removeSearchActionListener}}>
-                                    <div className={`transition-default duration-500 ease-in-out flex flex-col w-screen h-screen ${team === Team.Blue ? "bg-blue-300" : "bg-red-300"}`}>
-                                        
-                                        <TopBar />
-                                        <VideoPlayer />
-                                        <Policies />
-                                    </div>
+                                    <GraphOverlayContext.Provider value={{showGraph: showGraph, setShowGraph: this.setShowGraph}}>
+                                        <div className={`transition-default duration-500 ease-in-out flex flex-col w-screen h-screen ${team === Team.Blue ? "bg-blue-300" : "bg-red-300"}`}>
+                                            <TopBar />
+                                            <VideoPlayer />
+                                            <Policies />
+                                            <div className="" hidden={!showGraph}>
+                                                <Overlay />
+                                            </div>
+                                        </div>
+                                    </GraphOverlayContext.Provider>
                                 </SearchContext.Provider>
                             </AccuracyContext.Provider>
                         </TeamContext.Provider>

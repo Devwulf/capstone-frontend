@@ -100,3 +100,13 @@ export const TooltipContext = React.createContext<TooltipContextType>({
     resetCurrentTooltip: () => { return; },
     setTooltipEnabled: isEnabled => { return; }
 });
+
+export type GraphOverlayContextType = {
+    showGraph: boolean;
+    setShowGraph: (showGraph: boolean) => void;
+}
+
+export const GraphOverlayContext = React.createContext<GraphOverlayContextType>({
+    showGraph: false,
+    setShowGraph: showGraph => { return; }
+});
