@@ -100,7 +100,7 @@ class LineGraphInner extends React.Component<LineGraphProps, LineGraphState> {
         if (!data)
             return null;
         const actions: { label: string, value: string }[] = [];
-        Constants.Actions.forEach(action => {
+        Constants.Actions.concat(Constants.WinningActions).forEach(action => {
             actions.push({
                 label: action,
                 value: action

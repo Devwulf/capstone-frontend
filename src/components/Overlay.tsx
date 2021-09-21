@@ -2,6 +2,7 @@ import React from "react";
 import Scrollbars from "react-custom-scrollbars-2";
 import { GraphOverlayContext } from "../utils/Context";
 import LineGraph from "./LineGraph";
+import PieGraph from "./PieGraph";
 
 type OverlayProps = {
 
@@ -39,6 +40,7 @@ export default class Overlay extends React.Component<OverlayProps, OverlayState>
                                         <div className="px-4">
                                             <LineGraph isProbability={true} />
                                             <LineGraph isProbability={false} />
+                                            <PieGraph />
                                         </div>
                                     </Scrollbars>
                                 </div>

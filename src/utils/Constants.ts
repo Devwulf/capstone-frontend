@@ -37,4 +37,9 @@ export class Constants {
         "bMID_NEXUS_TURRET",
         "rMID_NEXUS_TURRET"
     ];
+
+    public static readonly WinningActions: string[] = [
+        "bWon",
+        "rWon"
+    ];
 }
