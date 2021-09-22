@@ -1,21 +1,24 @@
 {
   "files": {
     "main.css": "/capstone-frontend/static/css/main.2505d798.chunk.css",
-    "main.js": "/capstone-frontend/static/js/main.8ae29caa.chunk.js",
-    "main.js.map": "/capstone-frontend/static/js/main.8ae29caa.chunk.js.map",
+    "main.js": "/capstone-frontend/static/js/main.1724c018.chunk.js",
+    "main.js.map": "/capstone-frontend/static/js/main.1724c018.chunk.js.map",
     "runtime-main.js": "/capstone-frontend/static/js/runtime-main.b93e9a63.js",
     "runtime-main.js.map": "/capstone-frontend/static/js/runtime-main.b93e9a63.js.map",
-    "static/js/2.541425e7.chunk.js": "/capstone-frontend/static/js/2.541425e7.chunk.js",
-    "static/js/2.541425e7.chunk.js.map": "/capstone-frontend/static/js/2.541425e7.chunk.js.map",
+    "static/css/2.d59c41ec.chunk.css": "/capstone-frontend/static/css/2.d59c41ec.chunk.css",
+    "static/js/2.31ff8f56.chunk.js": "/capstone-frontend/static/js/2.31ff8f56.chunk.js",
+    "static/js/2.31ff8f56.chunk.js.map": "/capstone-frontend/static/js/2.31ff8f56.chunk.js.map",
     "index.html": "/capstone-frontend/index.html",
+    "static/css/2.d59c41ec.chunk.css.map": "/capstone-frontend/static/css/2.d59c41ec.chunk.css.map",
     "static/css/main.2505d798.chunk.css.map": "/capstone-frontend/static/css/main.2505d798.chunk.css.map",
-    "static/js/2.541425e7.chunk.js.LICENSE.txt": "/capstone-frontend/static/js/2.541425e7.chunk.js.LICENSE.txt",
+    "static/js/2.31ff8f56.chunk.js.LICENSE.txt": "/capstone-frontend/static/js/2.31ff8f56.chunk.js.LICENSE.txt",
     "static/media/logo.103b5fa1.svg": "/capstone-frontend/static/media/logo.103b5fa1.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.b93e9a63.js",
-    "static/js/2.541425e7.chunk.js",
+    "static/css/2.d59c41ec.chunk.css",
+    "static/js/2.31ff8f56.chunk.js",
     "static/css/main.2505d798.chunk.css",
-    "static/js/main.8ae29caa.chunk.js"
+    "static/js/main.1724c018.chunk.js"
   ]
 }
