@@ -38,7 +38,7 @@ export default class Overlay extends React.Component<OverlayProps, OverlayState>
                                 <div className="p-4" style={{height: "calc(100% - 4.5rem)"}}>
                                     <Scrollbars>
                                         <div className="px-4">
-                                            <LineGraph isProbability={true} />
+                                            <LineGraph isProbability={true} showTeam={false} />
                                             <LineGraph isProbability={false} />
                                             <PieGraph />
                                         </div>

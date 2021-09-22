@@ -12,6 +12,7 @@ type LineGraphProps = {
     authContext: AuthContextType;
     baseUrlContext: BaseUrlContextType;
     isProbability: boolean;
+    showTeam?: boolean;
 }
 
 type LineGraphState = {
@@ -95,7 +96,7 @@ class LineGraphInner extends React.Component<LineGraphProps, LineGraphState> {
     }
 
     render(): JSX.Element | null {
-        const { isProbability } = this.props;
+        const { isProbability, showTeam = true } = this.props;
         const { data, options } = this.state;
         if (!data)
             return null;
@@ -114,16 +115,18 @@ class LineGraphInner extends React.Component<LineGraphProps, LineGraphState> {
                         {`${isProbability ? "Probability" : "Q-Value"} Graph`}
                     </div>
                     <div className="flex flex-row">
-                        <div className="flex items-center mr-4">
-                            <span className="text-lg font-bold mr-2 text-gray-800">Team</span>
-                            <Toggle
-                                icons={false}
-                                onChange={event => {
-                                    const team = event.target.checked ?
-                                        Team.Red : Team.Blue;
-                                    this.setState({team: team});
-                                }} />
-                        </div>
+                        {showTeam && (
+                            <div className="flex items-center mr-4">
+                                <span className="text-lg font-bold mr-2 text-gray-800">Team</span>
+                                <Toggle
+                                    icons={false}
+                                    onChange={event => {
+                                        const team = event.target.checked ?
+                                            Team.Red : Team.Blue;
+                                        this.setState({team: team});
+                                    }} />
+                            </div>
+                        )}
                         
                         <div className="flex items-center mr-4">
                             <span className="text-lg font-bold mr-2 text-gray-800">End Action</span>
@@ -152,10 +155,10 @@ class LineGraphInner extends React.Component<LineGraphProps, LineGraphState> {
     }
 }
 
-export default function LineGraph(props: { isProbability: boolean }): JSX.Element {
+export default function LineGraph(props: { isProbability: boolean, showTeam?: boolean }): JSX.Element {
     const auth = useContext(AuthContext);
     const baseUrl = useContext(BaseUrlContext);
     return (
-        <LineGraphInner authContext={auth} baseUrlContext={baseUrl} isProbability={props.isProbability} />
+        <LineGraphInner authContext={auth} baseUrlContext={baseUrl} isProbability={props.isProbability} showTeam={props.showTeam} />
     );
 }

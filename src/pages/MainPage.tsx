@@ -146,9 +146,9 @@ export default class MainPage extends React.Component<MainPageProps, MainPageSta
                                             <TopBar />
                                             <VideoPlayer />
                                             <Policies />
-                                            <div className="" hidden={!showGraph}>
+                                            {showGraph && (
                                                 <Overlay />
-                                            </div>
+                                            )}
                                         </div>
                                     </GraphOverlayContext.Provider>
                                 </SearchContext.Provider>

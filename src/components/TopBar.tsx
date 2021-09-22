@@ -70,17 +70,24 @@ export default class TopBar extends React.Component<TopBarProps, TopBarState> {
                                 <div className="w-full flex flex-col max-w-3xl items-center">
                                     <Searchbar />
                                     <Tooltip order={2}
-                                        text="Type in the Youtube link to the match replay here. The following formats are accepted: https://youtu.be/kTewx3x6Dps or https://www.youtube.com/watch?v=kTewx3x6Dps"
+                                        text="Type in the Youtube link to the match replay here. Click the Demo button for a test Youtube link. The following formats are accepted: https://youtu.be/kTewx3x6Dps or https://www.youtube.com/watch?v=kTewx3x6Dps or kTewx3x6Dps"
                                         position="bottom"
                                         positionOffsetY={3}
                                         hasPrev
-                                        hasClose />
+                                        hasNext />
                                 </div>
                                 <div className="flex flex-col items-end justify-center w-40">
                                     <button className={`px-4 py-2 rounded-default text-sm ${team === Team.Blue ? "bg-blue-500 text-blue-200" : "bg-red-500 text-red-200"}`}
                                         onClick={() => setShowGraph(true)}>
                                         Show Graphs
                                     </button>
+                                    <Tooltip order={3}
+                                        text="This shows an overlay containing graphs for real-time visualization of data."
+                                        position="bottom"
+                                        positionOffsetX={-6}
+                                        positionOffsetY={3}
+                                        hasPrev
+                                        hasClose />
                                     {/*
                                 <>
                                     <span className="text-sm">Model Accuracy:</span>
