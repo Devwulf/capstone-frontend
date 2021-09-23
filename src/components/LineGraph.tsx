@@ -85,6 +85,8 @@ class LineGraphInner extends React.Component<LineGraphProps, LineGraphState> {
                     }
                 },
                 y: {
+                    min: isProbability ? 0 : -100,
+                    max: isProbability ? 1 : 100,
                     title: {
                         display: true,
                         text: isProbability ? "Probability" : "Q-Value"
