@@ -36,6 +36,7 @@ export class App extends React.Component<AppProps, AppState> {
             isTooltipEnabled: true
         };
 
+        console.log(Configuration.serverBaseUrl);
         this.setToken = this.setToken.bind(this);
         this.loadTokenFromCookie = this.loadTokenFromCookie.bind(this);
         this.checkTokenValid = this.checkTokenValid.bind(this);
