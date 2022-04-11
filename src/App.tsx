@@ -36,7 +36,6 @@ export class App extends React.Component<AppProps, AppState> {
             isTooltipEnabled: true
         };
 
-        console.log(Configuration.serverBaseUrl);
         this.setToken = this.setToken.bind(this);
         this.loadTokenFromCookie = this.loadTokenFromCookie.bind(this);
         this.checkTokenValid = this.checkTokenValid.bind(this);
@@ -146,7 +145,6 @@ export class App extends React.Component<AppProps, AppState> {
     render(): JSX.Element {
         const { cookies } = this.props;
         const { token, baseUrl, currentTooltip, isTooltipEnabled } = this.state;
-        console.log(token);
         
         return (
             <AuthContext.Provider value={{token: token, setToken: this.setToken}}>
